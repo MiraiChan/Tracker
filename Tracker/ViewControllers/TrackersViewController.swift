@@ -29,7 +29,7 @@ private extension TrackersViewController {
     
     func setupAddTrackerButton() {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "plus")?.withTintColor(.ypBlack, renderingMode: .alwaysOriginal),
+            image: UIImage(named: "Plus")?.withTintColor(.ypBlack, renderingMode: .alwaysOriginal),
             style: .plain,
             target: self,
             action: #selector(didAddTrackerButtonTapped)
