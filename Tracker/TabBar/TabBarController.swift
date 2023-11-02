@@ -14,9 +14,10 @@ final class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupTabBarView()
         setupTabBarViewController()
-    }
+  }    
 }
 
 // MARK: - Private methods to setup UI

@@ -20,6 +20,7 @@
 		015B58132AEBE6F400B9E485 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58122AEBE6F400B9E485 /* TabBarController.swift */; };
 		015B58162AEC2E8800B9E485 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58152AEC2E8800B9E485 /* TrackersViewController.swift */; };
 		015B58192AEC352100B9E485 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58182AEC352100B9E485 /* UIColorExtension.swift */; };
+		015B581F2AF3EF3600B9E485 /* NewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B581E2AF3EF3600B9E485 /* NewTrackerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		015B58122AEBE6F400B9E485 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		015B58152AEC2E8800B9E485 /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		015B58182AEC352100B9E485 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		015B581E2AF3EF3600B9E485 /* NewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 			children = (
 				015B58152AEC2E8800B9E485 /* TrackersViewController.swift */,
 				015B57E12AEB032900B9E485 /* StatisticsViewController.swift */,
+				015B581E2AF3EF3600B9E485 /* NewTrackerViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				015B57DE2AEB032900B9E485 /* AppDelegate.swift in Sources */,
 				015B58132AEBE6F400B9E485 /* TabBarController.swift in Sources */,
 				015B57E02AEB032900B9E485 /* SceneDelegate.swift in Sources */,
+				015B581F2AF3EF3600B9E485 /* NewTrackerViewController.swift in Sources */,
 				015B58162AEC2E8800B9E485 /* TrackersViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

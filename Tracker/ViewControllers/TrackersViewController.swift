@@ -12,49 +12,54 @@ final class TrackersViewController: UIViewController {
     private lazy var blankPageImage = UIImageView()
     private lazy var blankPageLabel = UILabel()
     private lazy var datePickerButton = UIDatePicker()
-    //private lazy var dateFormatter = DateFormatter()
     private lazy var searchBar = UISearchBar()
+    private lazy var screensaver = UIStackView()
     
-    
+    private let addButton = UIImage(named: "Plus")
+    private let addNewTrackerButton = UIButton(type: .system)
     private let blankPageImagePlaceholder = UIImage(named: "Blank_page_image_placeholder")
     private let trackersTitleLabel = UILabel()
-    
-    private lazy var dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "d MMM YYY"
-        return dateFormatter
-    }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         
-        viewControllerSettings()
+        self.restorationIdentifier = "TrackerViewController"
+        
+        viewControllerUISettings()
     }
 }
 
 private extension TrackersViewController {
     
-    func viewControllerSettings() {
+    func viewControllerUISettings() {
         setupAddTrackerButton()
         setupDatePicker()
-        //setupDF()
         
         setupTrackersTitleLabel()
         setupSearchBar()
         
         setupBlankImageView()
         setupBlankPageLabel()
+        
+        setupScreenSaver()
     }
     
     func setupAddTrackerButton() {
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(named: "Plus")?.withTintColor(.ypBlack, renderingMode: .alwaysOriginal),
-            style: .plain,
-            target: self,
-            action: #selector(didAddTrackerButtonTapped)
-        )
+        
+        addNewTrackerButton .frame = CGRect(x: 0, y: 0, width: 42, height: 42)
+        addNewTrackerButton .setImage(addButton, for: .normal)
+        addNewTrackerButton .addTarget(self, action: #selector(didAddTrackerButtonTapped), for: .touchUpInside)
+        addNewTrackerButton .tintColor = .black
+        
+        addNewTrackerButton .translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(addNewTrackerButton)
+        
+        NSLayoutConstraint.activate([
+            addNewTrackerButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            addNewTrackerButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20)
+            
+        ])
     }
     
     func setupDatePicker() -> UIDatePicker {
@@ -70,17 +75,14 @@ private extension TrackersViewController {
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(datePicker)
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePickerButton)
+        NSLayoutConstraint.activate([
+            datePicker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            datePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            datePicker.widthAnchor.constraint(equalToConstant: 100)
+        ])
         
         return datePicker
     }
-    
-    //    func setupDF() -> DateFormatter {
-    //        let formatter = dateFormatter
-    //        formatter.locale = Locale(identifier: "ru_RU")
-    //        formatter.dateFormat = "d MMM YYY"
-    //        return formatter
-    //    }
     
     func setupTrackersTitleLabel() {
         trackersTitleLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
@@ -90,9 +92,8 @@ private extension TrackersViewController {
         view.addSubview(trackersTitleLabel)
         
         NSLayoutConstraint.activate([
-            trackersTitleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            trackersTitleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            trackersTitleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+            trackersTitleLabel.topAnchor.constraint(equalTo: addNewTrackerButton.bottomAnchor, constant: 12),
+            trackersTitleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ])
     }
     
@@ -109,8 +110,8 @@ private extension TrackersViewController {
         
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: trackersTitleLabel.bottomAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
-            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8)
+            searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10)
         ])
         
         return searchBar
@@ -146,14 +147,28 @@ private extension TrackersViewController {
         ])
     }
     
-    @objc
-    private func didAddTrackerButtonTapped() {
+    func setupScreenSaver() {
+        let stack = screensaver
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = 10
         
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stack)
+        
+        stack.addArrangedSubview(blankPageImage)
+        stack.addArrangedSubview( blankPageLabel)
+        
+        NSLayoutConstraint.activate([
+            stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            stack.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)])
     }
     
-    @objc private func didChangeDate(_ sender: UIDatePicker) {
-        let selectedDate = sender.date
-        let formattedDate = dateFormatter.string(from: selectedDate)
-        presentedViewController?.dismiss(animated: false)
+    @objc
+    private func didAddTrackerButtonTapped() {
+        let newTrackerViewController = NewTrackerViewController() //(delegate: self)
+        self.present(newTrackerViewController, animated: true, completion: nil)
     }
+    
+    @objc private func didChangeDate(sender: UIDatePicker) { }
 }
