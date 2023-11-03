@@ -8,6 +8,8 @@
 import UIKit
 
 final class TrackersViewController: UIViewController {
+    private var categories: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
     
     private lazy var blankPageImage = UIImageView()
     private lazy var blankPageLabel = UILabel()

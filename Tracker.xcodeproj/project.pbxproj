@@ -21,6 +21,10 @@
 		015B58162AEC2E8800B9E485 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58152AEC2E8800B9E485 /* TrackersViewController.swift */; };
 		015B58192AEC352100B9E485 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58182AEC352100B9E485 /* UIColorExtension.swift */; };
 		015B581F2AF3EF3600B9E485 /* NewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B581E2AF3EF3600B9E485 /* NewTrackerViewController.swift */; };
+		015B58222AF5A1DB00B9E485 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58212AF5A1DB00B9E485 /* Tracker.swift */; };
+		015B58242AF5A1F600B9E485 /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58232AF5A1F600B9E485 /* TrackerCategory.swift */; };
+		015B58262AF5A21000B9E485 /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58252AF5A21000B9E485 /* TrackerRecord.swift */; };
+		015B58282AF5A57700B9E485 /* TrackerSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58272AF5A57700B9E485 /* TrackerSchedule.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +63,10 @@
 		015B58152AEC2E8800B9E485 /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		015B58182AEC352100B9E485 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		015B581E2AF3EF3600B9E485 /* NewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerViewController.swift; sourceTree = "<group>"; };
+		015B58212AF5A1DB00B9E485 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
+		015B58232AF5A1F600B9E485 /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
+		015B58252AF5A21000B9E485 /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
+		015B58272AF5A57700B9E485 /* TrackerSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerSchedule.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +117,7 @@
 		015B57DC2AEB032900B9E485 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				015B58202AF5A1B500B9E485 /* Models */,
 				015B58102AEBE66D00B9E485 /* Application */,
 				015B58112AEBE68300B9E485 /* TabBar */,
 				015B58142AEC2E6700B9E485 /* ViewControllers */,
@@ -172,6 +181,17 @@
 				015B58182AEC352100B9E485 /* UIColorExtension.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		015B58202AF5A1B500B9E485 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				015B58212AF5A1DB00B9E485 /* Tracker.swift */,
+				015B58232AF5A1F600B9E485 /* TrackerCategory.swift */,
+				015B58252AF5A21000B9E485 /* TrackerRecord.swift */,
+				015B58272AF5A57700B9E485 /* TrackerSchedule.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,9 +328,13 @@
 				015B57E82AEB032900B9E485 /* Tracker.xcdatamodeld in Sources */,
 				015B58192AEC352100B9E485 /* UIColorExtension.swift in Sources */,
 				015B57E22AEB032900B9E485 /* StatisticsViewController.swift in Sources */,
+				015B58262AF5A21000B9E485 /* TrackerRecord.swift in Sources */,
+				015B58222AF5A1DB00B9E485 /* Tracker.swift in Sources */,
+				015B58242AF5A1F600B9E485 /* TrackerCategory.swift in Sources */,
 				015B57DE2AEB032900B9E485 /* AppDelegate.swift in Sources */,
 				015B58132AEBE6F400B9E485 /* TabBarController.swift in Sources */,
 				015B57E02AEB032900B9E485 /* SceneDelegate.swift in Sources */,
+				015B58282AF5A57700B9E485 /* TrackerSchedule.swift in Sources */,
 				015B581F2AF3EF3600B9E485 /* NewTrackerViewController.swift in Sources */,
 				015B58162AEC2E8800B9E485 /* TrackersViewController.swift in Sources */,
 			);
