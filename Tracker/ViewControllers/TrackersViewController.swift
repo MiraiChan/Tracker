@@ -41,10 +41,10 @@ private extension TrackersViewController {
         setupTrackersTitleLabel()
         setupSearchBar()
         
+        setupScreenSaver()
+        
         setupBlankImageView()
         setupBlankPageLabel()
-        
-        setupScreenSaver()
     }
     
     func setupAddTrackerButton() {
@@ -119,6 +119,23 @@ private extension TrackersViewController {
         return searchBar
     }
     
+    func setupScreenSaver() {
+        let stack = screensaver
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = 10
+        
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stack)
+        
+        stack.addArrangedSubview(blankPageImage)
+        stack.addArrangedSubview(blankPageLabel)
+        
+        NSLayoutConstraint.activate([
+            stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            stack.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)])
+    }
+    
     func setupBlankImageView() {
         blankPageImage.image = blankPageImagePlaceholder
         
@@ -149,23 +166,6 @@ private extension TrackersViewController {
         ])
     }
     
-    func setupScreenSaver() {
-        let stack = screensaver
-        stack.axis = .vertical
-        stack.alignment = .center
-        stack.spacing = 10
-        
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stack)
-        
-        stack.addArrangedSubview(blankPageImage)
-        stack.addArrangedSubview( blankPageLabel)
-        
-        NSLayoutConstraint.activate([
-            stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-            stack.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)])
-    }
-    
     @objc
     private func didAddTrackerButtonTapped() {
         let newTrackerViewController = NewTrackerViewController() //(delegate: self)
@@ -174,3 +174,6 @@ private extension TrackersViewController {
     
     @objc private func didChangeDate(sender: UIDatePicker) { }
 }
+
+//Когда пользователь нажимает на + в ячейке трекера, добавляется соответствующая запись в completedTrackers. Если пользователь убирает пометку о выполненности в ячейке трекера, элемент удаляется из массива.
+//Новые трекеры добавляются в соответствующую категорию в массиве categories. Чтобы их добавить, нужно создать новую категорию с новым списком трекеров, а затем создать новый список категорий и присвоить его в categories. Мы не рекомендуем менять существующий массив, лучше создайте новый — так будет меньше пространства для трудноуловимых ошибок синхронизации данных.
