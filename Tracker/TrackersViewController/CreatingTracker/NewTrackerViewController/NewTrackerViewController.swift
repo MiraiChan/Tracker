@@ -5,10 +5,20 @@
 //  Created by Almira Khafizova on 02.11.23.
 //
 
-import Foundation
 import UIKit
 
+protocol NewTrackerViewControllerDelegate: AnyObject {
+    func didTrackerAdded (category: String, tracker: Tracker)
+}
+
 final class NewTrackerViewController: UIViewController {
+    
+    private weak var delegate: NewTrackerViewControllerDelegate? = nil
+    
+    convenience init(delegate: NewTrackerViewControllerDelegate) {
+        self.init(nibName: nil, bundle: Bundle.main)
+        self.delegate = delegate
+    }
     
     lazy private var pageTitleLabel = UILabel()
     lazy private var createHabitButton = UIButton()
@@ -98,5 +108,23 @@ private extension NewTrackerViewController {
     @IBAction func irregularEvenActionButton() {
         let irregularEventViewController = IrregularEventViewController()
         self.present(irregularEventViewController, animated: true, completion: nil)
+    }
+    
+    @objc
+    private func didHabitButtonTapped() {
+        //showNewTrackerViewController(isHabit: true)
+    }
+    
+    @objc
+    private func didEventButtonTapped() {
+    }
+}
+
+extension NewTrackerViewController: NewTrackerViewControllerDelegate {
+    
+    func didTrackerAdded(category: String, tracker: Tracker) {
+        dismiss(animated: true) { [weak delegate] in
+            delegate?.didTrackerAdded (category: category, tracker: tracker)
+        }
     }
 }

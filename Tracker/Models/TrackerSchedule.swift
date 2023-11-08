@@ -33,5 +33,14 @@ struct TrackerSchedule {
                 return "Воскресенье"
             }
         }
+        
+        //This method to convert a numeric day of the week value into a more readable and understandable enumeration value.
+        static func getWeekDay(weekDayInt: Int) -> DaysOfTheWeek {
+            var index = weekDayInt - 1
+            if index < 0 {
+                index += DaysOfTheWeek.allCases.count
+            }
+            return DaysOfTheWeek.allCases[index]
+        }
     }
 }
