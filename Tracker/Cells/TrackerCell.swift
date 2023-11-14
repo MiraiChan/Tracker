@@ -8,156 +8,209 @@
 import UIKit
 
 protocol TrackerCellDelegate: AnyObject {
+    func completeTracker(id: UUID, at indexPath: IndexPath)
+    func incompleteTracker(id: UUID, at indexPath: IndexPath)
     
-    func didTrackerCellTapped(item: TrackerCell.Item, cell: TrackerCell)
+    //func didTrackerCellTapped(item: TrackerCell.Item, cell: TrackerCell)
 }
-
 final class TrackerCell: UICollectionViewCell {
-    struct Item {
-        let trackerId: UInt
-        let title: String
-        let emoji: String
-        let color: UIColor
-        var count: Int
-        var isCompleted: Bool
-    }
     
-    private static let addButtonSize = 34.0
-    private static let emojiViewSize = 24.0
-    
-    private lazy var addImageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
-    }()
-    
-    private lazy var addView: UIView = {
-        let view = UIView()
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didAddButtonTapped)))
-        view.layer.cornerRadius = TrackerCell.addButtonSize * 0.5
-        view.layer.masksToBounds = true
-        return view
-    }()
-    
-    private lazy var cardView: UIView = {
+    //MARK: - Properties
+    private let cardView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 16
-        view.layer.masksToBounds = true
+        //view.layer.masksToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private lazy var daysLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .ypBlack
+    
+    private let emojiLabel: UILabel = {
+        let label = UILabel ()
+        label.backgroundColor = .ypBackgroundDay
+        label.clipsToBounds = true
+        label.layer.cornerRadius = 24 / 2
+        //label.layer.masksToBounds = true
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var emojiLabel: UILabel = {
+    private let taskTitleLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .ypRed
-        label.layer.cornerRadius = TrackerCell.emojiViewSize * 0.5
-        label.layer.masksToBounds = true
-        return label
-    }()
-    
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.numberOfLines = 2
         label.textColor = .ypWhite
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private weak var delegate: TrackerCellDelegate? = nil
-    private var item: TrackerCell.Item? = nil
+    private let stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.distribution = .fill
+        stack.spacing = 8
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    private let daysLabel: UILabel = {
+        let label = UILabel ()
+        label.text = "Поливать растения"
+        label.textColor = .ypBlack
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    private lazy var addButton: UIButton = {
+        let button = UIButton(type: .system)
+        let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
+        let image = plusImage
+        button.tintColor = .ypWhite
+        button.setImage (image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 34 / 2
+        button.addTarget(self, action: #selector(didAddButtonTapped),
+                         for: .touchUpInside)
+        return button
+    }()
+    
+    weak var delegate: TrackerCellDelegate?
+    
+    private var isCompletedToday: Bool = false
+    private var trackerId: UUID?
+    private var indexPath: IndexPath?
+    
+    //MARK: - Helpers
+    
+    func configure(
+        with tracker: Tracker,
+        isCompletedToday: Bool,
+        completedDays: Int,
+        indexPath: IndexPath
         
-        cardView.translatesAutoresizingMaskIntoConstraints = false
+    ) {
+        self.trackerId = tracker.id
+        self.isCompletedToday = isCompletedToday
+        self.indexPath = indexPath
+        
+        let color = UIColor(hex: tracker.color)
+        addElements()
+        setupConstraints()
+        cardView.backgroundColor = color
+        addButton.backgroundColor = color
+        
+        taskTitleLabel.text = tracker.name
+        emojiLabel.text = tracker.emoji
+        
+        let wordDay = pluralizeDays(completedDays)
+        daysLabel.text = "\(wordDay)"
+        
+        let image = isCompletedToday ? UIImage(named: "done") : plusImage //doneImage or "checkmark"
+        addButton.setImage(image, for: .normal)
+    }
+    
+    //private let doneImage = UIImage(named: "done")
+    
+    private func addElements() {
         contentView.addSubview(cardView)
-        NSLayoutConstraint.activate([
-            cardView.heightAnchor.constraint(equalToConstant: 90.0),
-            cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-        ])
+        contentView.addSubview(stackView)
         
-        emojiLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(emojiLabel)
-        NSLayoutConstraint.activate([
-            emojiLabel.widthAnchor.constraint(equalToConstant: TrackerCell.emojiViewSize),
-            emojiLabel.heightAnchor.constraint(equalToConstant: TrackerCell.emojiViewSize),
-            emojiLabel.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
-            emojiLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-        ])
+        contentView.addSubview(taskTitleLabel)
         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(titleLabel)
+        stackView.addArrangedSubview(daysLabel)
+        stackView.addArrangedSubview(addButton)
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-            titleLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
-            titleLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -12),
-        ])
-        
-        addView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(addView)
-        NSLayoutConstraint.activate([
-            addView.widthAnchor.constraint(equalToConstant: TrackerCell.addButtonSize),
-            addView.heightAnchor.constraint(equalToConstant: TrackerCell.addButtonSize),
-            addView.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 8),
-            addView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
-        ])
-        
-        addImageView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(addImageView)
-        NSLayoutConstraint.activate([
-            addImageView.centerXAnchor.constraint(equalTo: addView.centerXAnchor),
-            addImageView.centerYAnchor.constraint(equalTo: addView.centerYAnchor)
-        ])
-        
-        daysLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(daysLabel)
-        NSLayoutConstraint.activate([
-            daysLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-            daysLabel.centerYAnchor.constraint(equalTo: addView.centerYAnchor)
+            cardView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor
+            ),
+            cardView.topAnchor.constraint(
+                equalTo: contentView.topAnchor
+            ),
+            cardView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor
+            ),
+            cardView.heightAnchor.constraint(
+                equalToConstant: 90
+            ),
+            emojiLabel.leadingAnchor.constraint(
+                equalTo: cardView.leadingAnchor,
+                constant: 12
+            ),
+            
+            emojiLabel.topAnchor.constraint(
+                equalTo: cardView.topAnchor,
+                constant: 12
+            ),
+            emojiLabel.widthAnchor.constraint(equalToConstant: 24),
+            emojiLabel.heightAnchor.constraint(equalToConstant: 24),
+            
+            taskTitleLabel.leadingAnchor.constraint(
+                equalTo: emojiLabel.leadingAnchor
+            ),
+            
+            taskTitleLabel.bottomAnchor.constraint(
+                equalTo: cardView.bottomAnchor,
+                constant: -12
+            ),
+            taskTitleLabel.trailingAnchor.constraint(
+                equalTo: cardView.trailingAnchor,
+                constant: -12
+            ),
+            addButton.widthAnchor.constraint(equalToConstant: 34),
+            addButton.heightAnchor.constraint(equalToConstant: 34),
+            
+            stackView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: 12
+            ),
+            
+            stackView.topAnchor.constraint(
+                equalTo: cardView.bottomAnchor,
+                constant: 8
+            ),
+            stackView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -12
+            )
         ])
     }
     
-    required init?(coder: NSCoder) {
-        preconditionFailure("init(coder:) has not been implemented")
+    private func pluralizeDays(_ count: Int) -> String {
+        let remainder10 = count % 10
+        let remainder100 = count % 100
+        if remainder10 == 1 && remainder100 != 11 {
+            return "\(count) день"
+        } else if remainder10 >= 2 && remainder10 <= 4 && 
+                 (remainder100 < 10 || remainder100 >= 20)
+        { return "\(count) дня" } else
+        { return "\(count) дней" }
     }
     
-    func setDelegate(delegate: TrackerCellDelegate?) {
-        self.delegate = delegate
-    }
+    private let plusImage: UIImage = {
+        let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
+        let image = UIImage(
+            systemName: "plus",
+            withConfiguration: pointSize
+        ) ?? UIImage ()
+        return image
+    }()
     
-    func bind(item: Item) {
-        self.item = item
-        cardView.backgroundColor = item.color
-        addView.backgroundColor = item.color
-        let image = item.isCompleted ? UIImage(systemName: "checkmark") : UIImage(systemName: "plus")
-        addImageView.image = image?.withTintColor(.ypWhite, renderingMode: .alwaysOriginal)
-        daysLabel.text = getDaysString(days: item.count)
-        emojiLabel.text = item.emoji
-        titleLabel.text = item.title
-    }
-    
-    private func getDaysString(days: Int) -> String {
-        switch days {
-        case 1:
-            return "\(days) день"
-        case 2, 3, 4:
-            return "\(days) дня"
-        default:
-            return "\(days) дней"
+    @objc private func didAddButtonTapped() {//trackButtonTapped
+        guard let trackerId = trackerId,
+              let indexPath = indexPath else {
+            assertionFailure("no trackerId")
+            return
+        }
+        if isCompletedToday {
+            delegate?.incompleteTracker(id: trackerId, at: indexPath)
+        } else {
+            delegate?.completeTracker(id: trackerId, at: indexPath)
         }
     }
-    
-    @objc
-    private func didAddButtonTapped() {
-        guard let item = item else { return }
-        delegate?.didTrackerCellTapped(item: item, cell: self)
-    }
 }
-

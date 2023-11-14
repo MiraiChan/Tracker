@@ -21,17 +21,18 @@ extension UIColor {
 }
 
 extension UIColor {
-    
-    public convenience init(rgb color: Int) {
+    convenience init(hex: Int, alpha: CGFloat = 1.0) {
         self.init(
-            red: CGFloat((color & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((color & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(color & 0x0000FF) / 255.0,
-            alpha: CGFloat(1.0)
+            red: CGFloat((hex & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((hex & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(hex & 0x0000FF) / 255.0,
+            alpha: alpha
         )
     }
-    
-    public convenience init(rgba color: Int) {
+}
+
+extension UIColor {
+    convenience init(rgba color: Int) {
         self.init(
             red: CGFloat((color & 0xFF000000) >> 24) / 255.0,
             green: CGFloat((color & 0x00FF0000) >> 16) / 255.0,
@@ -47,9 +48,9 @@ extension UIColor {
         var alpha: CGFloat = 0.0
         if (getRed(&red, green: &green, blue: &blue, alpha: &alpha)) {
             return (Int(red * 255.0) << 24) +
-                (Int(green * 255.0) << 16) +
-                (Int(blue * 255.0) << 8) +
-                Int(alpha * 255.0)
+            (Int(green * 255.0) << 16) +
+            (Int(blue * 255.0) << 8) +
+            Int(alpha * 255.0)
         } else {
             return nil
         }
