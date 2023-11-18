@@ -106,21 +106,27 @@ final class TrackerCell: UICollectionViewCell {
         let wordDay = pluralizeDays(completedDays)
         daysLabel.text = "\(wordDay)"
         
-        let image = isCompletedToday ? doneImage?.withTintColor(cardView.backgroundColor ?? .ypBackgroundDay) :
-        plusImage.withTintColor(cardView.backgroundColor ?? .ypBackgroundDay) 
-        addButton.setImage(image, for: .normal)
+        let image = isCompletedToday ?
+        doneImage?.withTintColor(cardView.backgroundColor ?? .ypWhiteDay) :
+        plusImage.withTintColor(cardView.backgroundColor ?? .ypWhiteDay)
+        addButton.setImage(image, for: UIControl.State.normal)
+        if isCompletedToday {
+            addButton.alpha = 0.4
+        } else {
+            addButton.alpha = 1
+        }
     }
-    
+
     private let plusImage: UIImage = {
         let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
         let image = UIImage(
             systemName: "plus",
             withConfiguration: pointSize
-        ) ?? UIImage ()
+        )?.withRenderingMode(.alwaysTemplate) ?? UIImage ()
         return image
     }()
     
-    private let doneImage = UIImage(named: "Done")
+    private let doneImage = UIImage(named: "Done")?.withRenderingMode(.alwaysTemplate)
     
     private func addElements() {
         contentView.addSubview(cardView)
@@ -193,12 +199,17 @@ final class TrackerCell: UICollectionViewCell {
     private func pluralizeDays(_ count: Int) -> String {
         let remainder10 = count % 10
         let remainder100 = count % 100
-        if remainder10 == 1 && remainder100 != 11 {
+        if remainder10 >= 1 && remainder100 <= 19 {
+            return "\(count) дней"
+        }
+        switch remainder10 {
+        case 1:
             return "\(count) день"
-        } else if remainder10 >= 2 && remainder10 <= 4 && 
-                    (remainder100 < 10 || remainder100 >= 20)
-        { return "\(count) дня" } else
-        { return "\(count) дней" }
+        case 2, 3, 4:
+            return "\(count) дня"
+        default:
+            return "\(count) дней"
+        }
     }
     
     @objc private func didAddButtonTapped() {
@@ -207,6 +218,7 @@ final class TrackerCell: UICollectionViewCell {
             assertionFailure("no trackerId")
             return
         }
+
         if isCompletedToday {
             delegate?.incompleteTracker(id: trackerId, at: indexPath)
         } else {

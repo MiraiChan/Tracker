@@ -69,19 +69,6 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         return datePicker
     }()
     
-//    private lazy var datePickerLabel: UILabel = {
-//          let label = UILabel ()
-//          label.backgroundColor = .ypDatePickerBackground
-//          label.font = .systemFont(ofSize: 17, weight: .medium)
-//          label.textAlignment = .center
-//          label.textColor = .ypBlackDay
-//          label.translatesAutoresizingMaskIntoConstraints = false
-//          label.clipsToBounds = true
-//          label.layer.cornerRadius = 8
-//          label.layer.zPosition = 10
-//          return label
-//      }()
-    
     private lazy var blankPageImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -148,6 +135,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private func setupNav() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: plusButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePickerButton)
+        
     }
     
     private func addElements() {
@@ -155,7 +143,6 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(plusButton)
         view.addSubview(searchTextField)
         view.addSubview(datePickerButton)
-        //view.addSubview(datePickerLabel)
         
         view.addSubview(blankPageImage)
         view.addSubview(blankPageLabel)
@@ -217,6 +204,9 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func didChangeDate() {
+        let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yy"
+            let formattedDate = dateFormatter.string(from: datePickerButton.date)
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
     
