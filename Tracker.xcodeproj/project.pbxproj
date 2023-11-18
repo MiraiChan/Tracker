@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		012512432B043809000C1703 /* TrackerGeometricParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012512422B043809000C1703 /* TrackerGeometricParams.swift */; };
 		012512452B06445D000C1703 /* NewHabitTrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012512442B06445D000C1703 /* NewHabitTrackerViewCell.swift */; };
+		012512472B08DDC2000C1703 /* ScheduleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012512462B08DDC2000C1703 /* ScheduleViewCell.swift */; };
 		015B57DE2AEB032900B9E485 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B57DD2AEB032900B9E485 /* AppDelegate.swift */; };
 		015B57E02AEB032900B9E485 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B57DF2AEB032900B9E485 /* SceneDelegate.swift */; };
 		015B57E22AEB032900B9E485 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B57E12AEB032900B9E485 /* StatisticsViewController.swift */; };
@@ -55,6 +56,7 @@
 /* Begin PBXFileReference section */
 		012512422B043809000C1703 /* TrackerGeometricParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerGeometricParams.swift; sourceTree = "<group>"; };
 		012512442B06445D000C1703 /* NewHabitTrackerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHabitTrackerViewCell.swift; sourceTree = "<group>"; };
+		012512462B08DDC2000C1703 /* ScheduleViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewCell.swift; sourceTree = "<group>"; };
 		015B57DA2AEB032900B9E485 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		015B57DD2AEB032900B9E485 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		015B57DF2AEB032900B9E485 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -186,7 +188,7 @@
 		015B58142AEC2E6700B9E485 /* TrackersViewController */ = {
 			isa = PBXGroup;
 			children = (
-				015B582D2AFA633400B9E485 /* CreatingTracker */,
+				015B582D2AFA633400B9E485 /* AddingTracker */,
 				015B58292AF9A43100B9E485 /* NewHabitViewController.swift */,
 				015B582B2AF9A46200B9E485 /* IrregularEventViewController.swift */,
 			);
@@ -213,16 +215,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		015B582D2AFA633400B9E485 /* CreatingTracker */ = {
+		015B582D2AFA633400B9E485 /* AddingTracker */ = {
 			isa = PBXGroup;
 			children = (
 				015B58152AEC2E8800B9E485 /* TrackersViewController.swift */,
 				015B582F2AFA63F900B9E485 /* NewTrackerViewController */,
 				015B58332AFA786100B9E485 /* CategoryViewController.swift */,
 				015B58352AFA78B300B9E485 /* ScheduleViewController.swift */,
-				012512442B06445D000C1703 /* NewHabitTrackerViewCell.swift */,
 			);
-			path = CreatingTracker;
+			path = AddingTracker;
 			sourceTree = "<group>";
 		};
 		015B582E2AFA637000B9E485 /* StatisticsViewController */ = {
@@ -245,7 +246,9 @@
 			isa = PBXGroup;
 			children = (
 				015B58312AFA6AB000B9E485 /* TrackerCell.swift */,
+				012512442B06445D000C1703 /* NewHabitTrackerViewCell.swift */,
 				015B583B2AFA8EBB00B9E485 /* TrackerTitleSectionView.swift */,
+				012512462B08DDC2000C1703 /* ScheduleViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -405,6 +408,7 @@
 				015B57E02AEB032900B9E485 /* SceneDelegate.swift in Sources */,
 				015B58322AFA6AB000B9E485 /* TrackerCell.swift in Sources */,
 				015B582A2AF9A43100B9E485 /* NewHabitViewController.swift in Sources */,
+				012512472B08DDC2000C1703 /* ScheduleViewCell.swift in Sources */,
 				015B58282AF5A57700B9E485 /* TrackerSchedule.swift in Sources */,
 				015B581F2AF3EF3600B9E485 /* NewTrackerViewController.swift in Sources */,
 				015B58162AEC2E8800B9E485 /* TrackersViewController.swift in Sources */,

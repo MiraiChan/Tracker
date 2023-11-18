@@ -69,6 +69,19 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         return datePicker
     }()
     
+//    private lazy var datePickerLabel: UILabel = {
+//          let label = UILabel ()
+//          label.backgroundColor = .ypDatePickerBackground
+//          label.font = .systemFont(ofSize: 17, weight: .medium)
+//          label.textAlignment = .center
+//          label.textColor = .ypBlackDay
+//          label.translatesAutoresizingMaskIntoConstraints = false
+//          label.clipsToBounds = true
+//          label.layer.cornerRadius = 8
+//          label.layer.zPosition = 10
+//          return label
+//      }()
+    
     private lazy var blankPageImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -118,7 +131,6 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         configureView()
         setupNav()
         addElements()
-        showFirstPlaceholderScreen()
         configureCollectionView()
         setupConstraints()
     }
@@ -143,6 +155,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(plusButton)
         view.addSubview(searchTextField)
         view.addSubview(datePickerButton)
+        //view.addSubview(datePickerLabel)
         
         view.addSubview(blankPageImage)
         view.addSubview(blankPageLabel)
@@ -260,22 +273,9 @@ extension TrackersViewController: TrackersActions {
         self.collectionView.reloadData()
     }
     
+    // filtered by search input
     func showFirstPlaceholderScreen() {
         if filteredCategories.isEmpty {
-            collectionView.isHidden = true
-            trackersNotFoundImage.isHidden = true
-            trackerNotFoundText.isHidden = true
-        } else {
-            collectionView.isHidden = false
-            trackersNotFoundImage.isHidden = true
-            trackerNotFoundText.isHidden = true
-            blankPageImage.isHidden = true
-            blankPageLabel.isHidden = true
-        }
-    }
-    
-    func showSecondPlaceholderScreen() {
-        if categories.isEmpty {
             collectionView.isHidden = true
             blankPageImage.isHidden = true
             blankPageLabel.isHidden = true
@@ -283,8 +283,25 @@ extension TrackersViewController: TrackersActions {
             trackerNotFoundText.isHidden = false
         } else {
             collectionView.isHidden = false
+            blankPageImage.isHidden = true
+            blankPageLabel.isHidden = true
+            trackersNotFoundImage.isHidden = true
+            trackerNotFoundText.isHidden = true
+        }
+    }
+    
+    // filtered by date
+    func showSecondPlaceholderScreen() {
+        if filteredCategories.isEmpty {
+            collectionView.isHidden = true
             blankPageImage.isHidden = false
             blankPageLabel.isHidden = false
+            trackersNotFoundImage.isHidden = true
+            trackerNotFoundText.isHidden = true
+        } else {
+            collectionView.isHidden = false
+            blankPageImage.isHidden = true
+            blankPageLabel.isHidden = true
             trackersNotFoundImage.isHidden = true
             trackerNotFoundText.isHidden = true
         }
