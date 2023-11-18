@@ -7,4 +7,7 @@
 
 import UIKit
 
-final class IrregularEventViewController: UIViewController { }
+final class IrregularEventViewController: UIViewController {
+    let irregularEventCellReuseIdentifier = "IrregularEventTableViewCell"
+    var trackersViewController: TrackersActions?
+}

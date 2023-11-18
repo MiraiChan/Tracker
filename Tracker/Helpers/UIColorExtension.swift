@@ -8,51 +8,39 @@
 import UIKit
 
 extension UIColor {
-    static var ypBlack: UIColor { UIColor(named: "YP Black") ?? UIColor.black }
-    static var ypWhite: UIColor { UIColor(named: "YP White") ?? UIColor.white }
-    static var ypGray: UIColor { UIColor(named: "YP Gray") ?? UIColor.gray }
-    static var ypLightGray: UIColor { UIColor(named: "YP Light Gray") ?? UIColor.lightGray }
-    static var ypBackgroundDark: UIColor { UIColor(named: "YP Background (Alpha 85)") ?? UIColor.darkGray }
-    static var ypBackgroundDay: UIColor { UIColor(named: "YP Background (Alpha 30)") ?? UIColor.lightGray }
+    static var ypBlackDay: UIColor { UIColor(named: "YP Black Day") ?? UIColor.black }
+    static var ypBlackNight: UIColor { UIColor(named: "YP Black Night") ?? UIColor.white }
     
-    static var ypBackground: UIColor { UIColor(named: "YP Background (Alpha 12)") ?? UIColor.lightGray }
+    static var ypWhiteNight: UIColor { UIColor(named: "YP White Night") ?? UIColor.black }
+    static var ypWhiteDay: UIColor { UIColor(named: "YP White Day") ?? UIColor.white }
+    
     static var ypBlue: UIColor { UIColor(named: "YP Blue") ?? UIColor.blue }
     static var ypRed: UIColor { UIColor(named: "YP Red") ?? UIColor.red }
-}
-
-extension UIColor {
-    convenience init(hex: Int, alpha: CGFloat = 1.0) {
-        self.init(
-            red: CGFloat((hex & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((hex & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(hex & 0x0000FF) / 255.0,
-            alpha: alpha
-        )
-    }
-}
-
-extension UIColor {
-    convenience init(rgba color: Int) {
-        self.init(
-            red: CGFloat((color & 0xFF000000) >> 24) / 255.0,
-            green: CGFloat((color & 0x00FF0000) >> 16) / 255.0,
-            blue: CGFloat((color & 0x0000FF00) >> 8) / 255.0,
-            alpha: CGFloat(color & 0x000000FF) / 255.0
-        )
-    }
     
-    func convertToRgba() -> Int? {
-        var red: CGFloat = 0.0
-        var green: CGFloat = 0.0
-        var blue: CGFloat = 0.0
-        var alpha: CGFloat = 0.0
-        if (getRed(&red, green: &green, blue: &blue, alpha: &alpha)) {
-            return (Int(red * 255.0) << 24) +
-            (Int(green * 255.0) << 16) +
-            (Int(blue * 255.0) << 8) +
-            Int(alpha * 255.0)
-        } else {
-            return nil
-        }
-    }
+    static var ypGray: UIColor { UIColor(named: "YP Gray") ?? UIColor.gray }
+    static var ypLightGray: UIColor { UIColor(named: "YP Light Gray") ?? UIColor.lightGray }
+    static var ypDatePickerBackground: UIColor { UIColor(named: "YP DatePicker Background") ?? UIColor.lightGray }
+    static var ypBackground: UIColor { UIColor(named: "YP Background (Alpha 12)") ?? UIColor.lightGray }
+    
+    static var ypBackgroundNight: UIColor { UIColor(named: "YP Background (Alpha 85)") ?? UIColor.darkGray }
+    static var ypBackgroundDay: UIColor { UIColor(named: "YP Background (Alpha 30)") ?? UIColor.lightGray }
+    
+    static var ypColorSelection1: UIColor { UIColor(named: "Color selection 1") ?? UIColor.red }
+    static var ypColorSelection2: UIColor { UIColor(named: "Color selection 2") ?? UIColor.orange }
+    static var ypColorSelection3: UIColor { UIColor(named: "Color selection 3") ?? UIColor.blue }
+    static var ypColorSelection4: UIColor { UIColor(named: "Color selection 4") ?? UIColor.purple }
+    static var ypColorSelection5: UIColor { UIColor(named: "Color selection 5") ?? UIColor.green }
+    static var ypColorSelection6: UIColor { UIColor(named: "Color selection 6") ?? UIColor.systemPink }
+    static var ypColorSelection7: UIColor { UIColor(named: "Color selection 7") ?? UIColor.systemPink }
+    static var ypColorSelection8: UIColor { UIColor(named: "Color selection 8") ?? UIColor.blue }
+    static var ypColorSelection9: UIColor { UIColor(named: "Color selection 9") ?? UIColor.green }
+    static var ypColorSelection10: UIColor { UIColor(named: "Color selection 10") ?? UIColor.blue }
+    static var ypColorSelection11: UIColor { UIColor(named: "Color selection 11") ?? UIColor.red }
+    static var ypColorSelection12: UIColor { UIColor(named: "Color selection 12") ?? UIColor.systemPink }
+    static var ypColorSelection13: UIColor { UIColor(named: "Color selection 13") ?? UIColor.orange }
+    static var ypColorSelection14: UIColor { UIColor(named: "Color selection 14") ?? UIColor.blue }
+    static var ypColorSelection15: UIColor { UIColor(named: "Color selection 15") ?? UIColor.purple }
+    static var ypColorSelection16: UIColor { UIColor(named: "Color selection 16") ?? UIColor.purple }
+    static var ypColorSelection17: UIColor { UIColor(named: "Color selection 17") ?? UIColor.purple }
+    static var ypColorSelection18: UIColor { UIColor(named: "Color selection 18") ?? UIColor.green }
 }

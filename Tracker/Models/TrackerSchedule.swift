@@ -6,16 +6,16 @@
 //
 
 struct TrackerSchedule {
-    enum DaysOfTheWeek: CaseIterable {
-        case monday
-        case tuesday
-        case wednesday
-        case thursday
-        case friday
-        case saturday
-        case sunday
+    enum DaysOfTheWeek: Int, CaseIterable {
+        case monday = 2
+        case tuesday = 3
+        case wednesday = 4
+        case thursday = 5
+        case friday = 6
+        case saturday = 7
+        case sunday = 1
         
-        func getNameOfWeekDays(from: DaysOfTheWeek) -> String {
+        var daysNames: String {
             switch self {
             case .monday:
                 return "Понедельник"
@@ -32,15 +32,6 @@ struct TrackerSchedule {
             case .sunday:
                 return "Воскресенье"
             }
-        }
-        
-        //This method to convert a numeric day of the week value into a more readable and understandable enumeration value.
-        static func getWeekDay(weekDayInt: Int) -> DaysOfTheWeek {
-            var index = weekDayInt - 1
-            if index < 0 {
-                index += DaysOfTheWeek.allCases.count
-            }
-            return DaysOfTheWeek.allCases[index]
         }
     }
 }

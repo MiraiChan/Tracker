@@ -25,13 +25,12 @@ final class TabBarController: UITabBarController {
 private extension TabBarController {
     
     func setupTabBarView() {
-        //tabBar.isTranslucent = false
         tabBar.tintColor = .ypBlue
-        tabBar.backgroundColor = .ypWhite
+        tabBar.backgroundColor = .ypWhiteDay
     }
     
     func setupTabBarViewController() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = .ypWhiteDay
         
         setupTabBarItem(for: trackersViewController, title: "Трекеры", image: "Trackers")
         setupTabBarItem(for: statisticsViewController, title: "Статистика", image: "Statistics")

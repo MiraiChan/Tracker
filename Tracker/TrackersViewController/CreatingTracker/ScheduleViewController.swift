@@ -7,4 +7,8 @@
 
 import UIKit
 
-final class ScheduleViewController: UIViewController {}
+protocol SelectedDays { }
+
+final class ScheduleViewController: UIViewController {
+    var newHabitViewController: SelectedDays?
+}

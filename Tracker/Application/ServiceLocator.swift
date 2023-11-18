@@ -16,6 +16,6 @@ struct ServiceLocator {
     let trackerStorage: TrackersStorageProtocol
     
     private init() {
-        trackerStorage = TrackersStorage()
+        trackerStorage = TrackersStorage.shared
     }
 }

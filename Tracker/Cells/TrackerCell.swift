@@ -10,28 +10,24 @@ import UIKit
 protocol TrackerCellDelegate: AnyObject {
     func completeTracker(id: UUID, at indexPath: IndexPath)
     func incompleteTracker(id: UUID, at indexPath: IndexPath)
-    
-    //func didTrackerCellTapped(item: TrackerCell.Item, cell: TrackerCell)
 }
+
 final class TrackerCell: UICollectionViewCell {
     
     //MARK: - Properties
     private let cardView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 16
-        //view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     
     private let emojiLabel: UILabel = {
         let label = UILabel ()
         label.backgroundColor = .ypBackgroundDay
         label.clipsToBounds = true
         label.layer.cornerRadius = 24 / 2
-        //label.layer.masksToBounds = true
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = .systemFont(ofSize: 16, weight: .medium)//?14
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -39,9 +35,12 @@ final class TrackerCell: UICollectionViewCell {
     
     private let taskTitleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .ypWhite
+        label.textColor = .ypWhiteDay
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.preferredMaxLayoutWidth = 143
+        label.frame = CGRect(x: 120, y: 106, width: 143, height: 34)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -54,11 +53,12 @@ final class TrackerCell: UICollectionViewCell {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
+    
     private let daysLabel: UILabel = {
         let label = UILabel ()
-        label.text = "Поливать растения"
-        label.textColor = .ypBlack
+        label.textColor = .ypBlackDay
         label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.frame = CGRect(x: 120, y: 106, width: 101, height: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -67,8 +67,8 @@ final class TrackerCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
         let image = plusImage
-        button.tintColor = .ypWhite
-        button.setImage (image, for: .normal)
+        button.tintColor = .ypWhiteDay
+        button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 34 / 2
         button.addTarget(self, action: #selector(didAddButtonTapped),
@@ -77,6 +77,7 @@ final class TrackerCell: UICollectionViewCell {
     }()
     
     weak var delegate: TrackerCellDelegate?
+    static var reuseId = "cell"
     
     private var isCompletedToday: Bool = false
     private var trackerId: UUID?
@@ -89,17 +90,15 @@ final class TrackerCell: UICollectionViewCell {
         isCompletedToday: Bool,
         completedDays: Int,
         indexPath: IndexPath
-        
     ) {
         self.trackerId = tracker.id
         self.isCompletedToday = isCompletedToday
         self.indexPath = indexPath
         
-        let color = UIColor(hex: tracker.color)
         addElements()
         setupConstraints()
-        cardView.backgroundColor = color
-        addButton.backgroundColor = color
+        self.cardView.backgroundColor = tracker.color
+        self.addButton.backgroundColor = tracker.color
         
         taskTitleLabel.text = tracker.name
         emojiLabel.text = tracker.emoji
@@ -107,11 +106,21 @@ final class TrackerCell: UICollectionViewCell {
         let wordDay = pluralizeDays(completedDays)
         daysLabel.text = "\(wordDay)"
         
-        let image = isCompletedToday ? UIImage(named: "done") : plusImage //doneImage or "checkmark"
+        let image = isCompletedToday ? doneImage?.withTintColor(cardView.backgroundColor ?? .ypBackgroundDay) :
+        plusImage.withTintColor(cardView.backgroundColor ?? .ypBackgroundDay) 
         addButton.setImage(image, for: .normal)
     }
     
-    //private let doneImage = UIImage(named: "done")
+    private let plusImage: UIImage = {
+        let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
+        let image = UIImage(
+            systemName: "plus",
+            withConfiguration: pointSize
+        ) ?? UIImage ()
+        return image
+    }()
+    
+    private let doneImage = UIImage(named: "Done")
     
     private func addElements() {
         contentView.addSubview(cardView)
@@ -187,21 +196,12 @@ final class TrackerCell: UICollectionViewCell {
         if remainder10 == 1 && remainder100 != 11 {
             return "\(count) день"
         } else if remainder10 >= 2 && remainder10 <= 4 && 
-                 (remainder100 < 10 || remainder100 >= 20)
+                    (remainder100 < 10 || remainder100 >= 20)
         { return "\(count) дня" } else
         { return "\(count) дней" }
     }
     
-    private let plusImage: UIImage = {
-        let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
-        let image = UIImage(
-            systemName: "plus",
-            withConfiguration: pointSize
-        ) ?? UIImage ()
-        return image
-    }()
-    
-    @objc private func didAddButtonTapped() {//trackButtonTapped
+    @objc private func didAddButtonTapped() {
         guard let trackerId = trackerId,
               let indexPath = indexPath else {
             assertionFailure("no trackerId")

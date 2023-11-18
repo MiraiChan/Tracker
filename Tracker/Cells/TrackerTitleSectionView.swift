@@ -8,8 +8,14 @@
 import UIKit
 
 final class TrackerTitleSectionView: UICollectionReusableView {
+    static let id = "header section"
+    var headerText: String? {
+        didSet {
+            titleLabel.text = headerText
+        }
+    }
     
-    private lazy var label: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 19)
         label.textAlignment = .natural
@@ -19,21 +25,18 @@ final class TrackerTitleSectionView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        label.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(label)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(titleLabel)
+        
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: self.topAnchor),
-            label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 28),
-            label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -28),
-            label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12)
         ])
-    }
-    
-    func bind(item: String) {
-        label.text = item
     }
     
     required init?(coder: NSCoder) {
         preconditionFailure("init(coder:) has not been implemented")
     }
 }
+
+
