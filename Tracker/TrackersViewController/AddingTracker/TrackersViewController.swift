@@ -124,7 +124,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     
     private func reloadData() {
         categories = dataManager.categories
-        reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
+        showSecondPlaceholderScreen()
     }
     
     private func configureView() {
@@ -238,11 +238,12 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
 }
 
 extension TrackersViewController: UITextViewDelegate {
-    func textFieldShouldReturn(_textField: UITextField) -> Bool {
-        searchTextField.resignFirstResponder()
-        
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        self.filterText = textField.text
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
-        
+    }
+    
+    func textFieldShouldReturn(_textField: UITextField) -> Bool {
         return true
     }
 }
@@ -251,14 +252,19 @@ extension TrackersViewController: UITextViewDelegate {
 extension TrackersViewController: TrackersActions {
     func appendTracker(tracker: Tracker) {
         self.trackers.append(tracker)
+
         self.categories = self.categories.map { category in
-            var updatedTrackers = category.trackers
-            updatedTrackers.append(tracker)
-            return TrackerCategory(title: category.title, trackers: updatedTrackers)
+            if (category.title == "Радостные мелочи") {
+                var updatedTrackers = category.trackers
+                updatedTrackers.append(tracker)
+                return TrackerCategory(title: category.title, trackers: updatedTrackers)
+            }
+            return category
         }
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
-    
+        
+
     func reload() {
         self.collectionView.reloadData()
     }

@@ -11,13 +11,15 @@ final class TabBarController: UITabBarController {
     
     let trackersViewController = TrackersViewController()
     let statisticsViewController = StatisticsViewController()
+    let separatorImage = UIImage()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupTabBarView()
         setupTabBarViewController()
-    }    
+        setupSeparator()
+    }
 }
 
 // MARK: - Private methods to setup UI
@@ -48,6 +50,13 @@ private extension TabBarController {
             image: UIImage(named: image),
             selectedImage: nil
         )
+    }
+    
+    func setupSeparator() {
+        self.tabBar.shadowImage = separatorImage
+        self.tabBar.backgroundImage = separatorImage
+        self.tabBar.layer.borderWidth = 0.50
+        self.tabBar.clipsToBounds = true
     }
 }
 
