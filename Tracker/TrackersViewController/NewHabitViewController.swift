@@ -28,7 +28,7 @@ final class NewHabitViewController: UIViewController {
         .ypColorSelection16, .ypColorSelection17, .ypColorSelection18
     ]
     
-    private let header: UILabel = {
+    private let habitPageHeader: UILabel = {
         let header = UILabel()
         header.translatesAutoresizingMaskIntoConstraints = false
         header.text = "Новая привычка"
@@ -73,7 +73,7 @@ final class NewHabitViewController: UIViewController {
     
     private lazy var clearButton: UIButton = {
         let clearButton = UIButton(type: .custom)
-        clearButton.setImage(UIImage(named: "cleanKeyboard"), for: .normal)
+        clearButton.setImage(UIImage(named: "Clean_icon"), for: .normal)
         clearButton.frame = CGRect(x: 0, y: 0, width: 17, height: 17)
         clearButton.contentMode = .scaleAspectFit
         clearButton.addTarget(self, action: #selector(clearTextField), for: .touchUpInside)
@@ -116,10 +116,10 @@ final class NewHabitViewController: UIViewController {
             view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            header.topAnchor.constraint(equalTo: view.topAnchor, constant: 26),
-            header.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            addTrackerName.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 38),
-            addTrackerName.centerXAnchor.constraint(equalTo: header.centerXAnchor),
+            habitPageHeader.topAnchor.constraint(equalTo: view.topAnchor, constant: 26),
+            habitPageHeader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            addTrackerName.topAnchor.constraint(equalTo: habitPageHeader.bottomAnchor, constant: 38),
+            addTrackerName.centerXAnchor.constraint(equalTo: habitPageHeader.centerXAnchor),
             addTrackerName.heightAnchor.constraint(equalToConstant: 75),
             addTrackerName.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             addTrackerName.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -139,7 +139,7 @@ final class NewHabitViewController: UIViewController {
     }
     
     private func addSubviews() {
-        view.addSubview(header)
+        view.addSubview(habitPageHeader)
         view.addSubview(addTrackerName)
         view.addSubview(trackersTableView)
         view.addSubview(cancelButton)

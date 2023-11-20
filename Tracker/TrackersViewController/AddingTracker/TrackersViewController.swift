@@ -204,9 +204,9 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func didChangeDate() {
-        let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd.MM.yy"
-            let formattedDate = dateFormatter.string(from: datePickerButton.date)
+        //        let dateFormatter = DateFormatter()
+        //        dateFormatter.dateFormat = "dd.MM.yy"
+        //        let formattedDate = dateFormatter.string(from: datePickerButton.date)
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
     

@@ -15,14 +15,14 @@ protocol TrackerCellDelegate: AnyObject {
 final class TrackerCell: UICollectionViewCell {
     
     //MARK: - Properties
-    private let cardView: UIView = {
+    private lazy var cardView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 16
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let emojiLabel: UILabel = {
+    private lazy var emojiLabel: UILabel = {
         let label = UILabel ()
         label.backgroundColor = .ypBackgroundDay
         label.clipsToBounds = true
@@ -33,7 +33,7 @@ final class TrackerCell: UICollectionViewCell {
         return label
     }()
     
-    private let taskTitleLabel: UILabel = {
+    private lazy var taskTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .ypWhiteDay
         label.font = .systemFont(ofSize: 12, weight: .medium)
@@ -45,7 +45,7 @@ final class TrackerCell: UICollectionViewCell {
         return label
     }()
     
-    private let stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.distribution = .fill
@@ -54,7 +54,7 @@ final class TrackerCell: UICollectionViewCell {
         return stack
     }()
     
-    private let daysLabel: UILabel = {
+    private lazy var daysLabel: UILabel = {
         let label = UILabel ()
         label.textColor = .ypBlackDay
         label.font = .systemFont(ofSize: 12, weight: .medium)
@@ -116,8 +116,8 @@ final class TrackerCell: UICollectionViewCell {
             addButton.alpha = 1
         }
     }
-
-    private let plusImage: UIImage = {
+    
+    private lazy var plusImage: UIImage = {
         let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
         let image = UIImage(
             systemName: "plus",
@@ -126,7 +126,7 @@ final class TrackerCell: UICollectionViewCell {
         return image
     }()
     
-    private let doneImage = UIImage(named: "Done")?.withRenderingMode(.alwaysTemplate)
+    private lazy var doneImage = UIImage(named: "Done")?.withRenderingMode(.alwaysTemplate)
     
     private func addElements() {
         contentView.addSubview(cardView)
@@ -218,7 +218,7 @@ final class TrackerCell: UICollectionViewCell {
             assertionFailure("no trackerId")
             return
         }
-
+        
         if isCompletedToday {
             delegate?.incompleteTracker(id: trackerId, at: indexPath)
         } else {

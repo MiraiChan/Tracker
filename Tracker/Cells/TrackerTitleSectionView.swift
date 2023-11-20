@@ -35,7 +35,8 @@ final class TrackerTitleSectionView: UICollectionReusableView {
     }
     
     required init?(coder: NSCoder) {
-        preconditionFailure("init(coder:) has not been implemented")
+        assertionFailure("init(coder:) has not been implemented")
+        return nil
     }
 }
 

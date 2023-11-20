@@ -1,15 +1,15 @@
 //
-//  NewHabitTrackerViewCell.swift
+//  IrregularEventCell.swift
 //  Tracker
 //
-//  Created by Almira Khafizova on 16.11.23.
+//  Created by Almira Khafizova on 20.11.23.
 //
 
 import UIKit
 
-final class NewHabitTrackerViewCell: UITableViewCell {
+final class IrregularEventCell: UITableViewCell {
     
-    private lazy var titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -47,9 +47,4 @@ final class NewHabitTrackerViewCell: UITableViewCell {
         assertionFailure("init(coder:) has not been implemented")
         return nil
     }
-    
-    func update(with title: String) {
-        titleLabel.text = title
-    }
 }
-

@@ -11,7 +11,7 @@ final class ScheduleViewCell: UITableViewCell {
     
     var selectedDay: Bool = false
     
-    private let weekDay: UILabel = {
+    private lazy var weekDay: UILabel = {
         let dayOfWeek = UILabel()
         dayOfWeek.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         dayOfWeek.translatesAutoresizingMaskIntoConstraints = false
@@ -44,7 +44,8 @@ final class ScheduleViewCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        assertionFailure("init(coder:) has not been implemented")
+        return nil
     }
     
     @objc private func switchWasTapped(_ sender: UISwitch) {
@@ -55,4 +56,3 @@ final class ScheduleViewCell: UITableViewCell {
         weekDay.text = title
     }
 }
-

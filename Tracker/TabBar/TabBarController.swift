@@ -17,7 +17,7 @@ final class TabBarController: UITabBarController {
         
         setupTabBarView()
         setupTabBarViewController()
-  }    
+    }    
 }
 
 // MARK: - Private methods to setup UI
