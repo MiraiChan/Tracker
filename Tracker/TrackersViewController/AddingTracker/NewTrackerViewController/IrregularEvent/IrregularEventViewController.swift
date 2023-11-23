@@ -1,5 +1,5 @@
 //
-//  NewHabitViewController.swift
+//  IrregularEventViewController.swift
 //  Tracker
 //
 //  Created by Almira Khafizova on 06.11.23.
@@ -7,21 +7,13 @@
 
 import UIKit
 
-protocol TrackersActions {
-    func appendTracker(tracker: Tracker)
-    func reload()
-    func showFirstPlaceholderScreen()
-}
-
-final class NewHabitViewController: UIViewController {
-    
+final class IrregularEventViewController: UIViewController {
+    let irregularEventCellReuseIdentifier = "IrregularEventTableViewCell"
     var trackersViewController: TrackersActions?
-    let cellReuseIdentifier = "NewHabitTableViewController"
     
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
     
-    private var selectedDays: [TrackerSchedule.DaysOfTheWeek] = []
     private let colors: [UIColor] = [
         .ypColorSelection1, .ypColorSelection2, .ypColorSelection3,
         .ypColorSelection4, .ypColorSelection5, .ypColorSelection6,
@@ -31,8 +23,9 @@ final class NewHabitViewController: UIViewController {
         .ypColorSelection16, .ypColorSelection17, .ypColorSelection18
     ]
     
-    private let emoji: [String] = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
-                                   "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
+    private let emoji: [String] = [
+        "🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
+        "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
     ]
     
     private let scrollView: UIScrollView = {
@@ -42,16 +35,16 @@ final class NewHabitViewController: UIViewController {
         return scrollView
     }()
     
-    private let habitPageHeader: UILabel = {
+    private let eventPageHeader: UILabel = {
         let header = UILabel()
         header.translatesAutoresizingMaskIntoConstraints = false
-        header.text = "Новая привычка"
+        header.text = "Новое нерегулярное событие"
         header.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         header.textColor = .ypBlackDay
         return header
     }()
     
-    private let addTrackerName: UITextField = {
+    private let addEventName: UITextField = {
         let addTrackerName = UITextField()
         addTrackerName.translatesAutoresizingMaskIntoConstraints = false
         addTrackerName.placeholder = "Введите название трекера"
@@ -60,8 +53,8 @@ final class NewHabitViewController: UIViewController {
         let leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
         addTrackerName.leftView = leftView
         addTrackerName.leftViewMode = .always
-        addTrackerName.keyboardType = .default
         addTrackerName.returnKeyType = .done
+        addTrackerName.keyboardType = .default
         addTrackerName.becomeFirstResponder()
         return addTrackerName
     }()
@@ -79,7 +72,7 @@ final class NewHabitViewController: UIViewController {
         return cancelButton
     }()
     
-    private let trackersTableView: UITableView = {
+    private let irregularEventTableView: UITableView = {
         let trackersTableView = UITableView()
         trackersTableView.translatesAutoresizingMaskIntoConstraints = false
         return trackersTableView
@@ -94,13 +87,13 @@ final class NewHabitViewController: UIViewController {
         clearButton.isHidden = true
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 29, height: 17))
         paddingView.addSubview(clearButton)
-        addTrackerName.rightView = paddingView
-        addTrackerName.rightViewMode = .whileEditing
+        addEventName.rightView = paddingView
+        addEventName.rightViewMode = .whileEditing
         return clearButton
     }()
     
     private lazy var createButton: UIButton = {
-        let createButton: UIButton = UIButton(type: .custom)
+        let createButton = UIButton(type: .custom)
         createButton.setTitleColor(.ypWhiteDay, for: .normal)
         createButton.backgroundColor = .ypGray
         createButton.layer.cornerRadius = 16
@@ -115,8 +108,8 @@ final class NewHabitViewController: UIViewController {
     private let emojiCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(HabitEmojiCell.self, forCellWithReuseIdentifier: "HabitEmojiCell")
-        collectionView.register(HabitEmojiHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HabitEmojiHeader.id)
+        collectionView.register(EventEmojiCell.self, forCellWithReuseIdentifier: "Event emoji cell")
+        collectionView.register(EventEmojiHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: EventEmojiHeader.id)
         collectionView.allowsMultipleSelection = false
         return collectionView
     }()
@@ -124,8 +117,8 @@ final class NewHabitViewController: UIViewController {
     private let colorCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(HabitColorCell.self, forCellWithReuseIdentifier: "HabitColorCell")
-        collectionView.register(HabitColorHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HabitColorHeader.id)
+        collectionView.register(EventColorCell.self, forCellWithReuseIdentifier: "Event color cell")
+        collectionView.register(EventColorHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: EventColorHeader.id)
         collectionView.allowsMultipleSelection = false
         return collectionView
     }()
@@ -137,19 +130,18 @@ final class NewHabitViewController: UIViewController {
         addSubviews()
         setupConstraints()
         
-        addTrackerName.delegate = self
+        addEventName.delegate = self
         
-        setupTrackersTableView()
+        setupIrregularEventTableView()
         setupEmojiCollectionView()
         setupColorCollectionView()
-        
     }
     
     private func addSubviews() {
         view.addSubview(scrollView)
-        scrollView.addSubview(habitPageHeader)
-        scrollView.addSubview(addTrackerName)
-        scrollView.addSubview(trackersTableView)
+        scrollView.addSubview(eventPageHeader)
+        scrollView.addSubview(addEventName)
+        scrollView.addSubview(irregularEventTableView)
         scrollView.addSubview(emojiCollectionView)
         scrollView.addSubview(colorCollectionView)
         scrollView.addSubview(cancelButton)
@@ -163,22 +155,22 @@ final class NewHabitViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            habitPageHeader.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 26),
-            habitPageHeader.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            habitPageHeader.heightAnchor.constraint(equalToConstant: 22),
+            eventPageHeader.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 26),
+            eventPageHeader.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            eventPageHeader.heightAnchor.constraint(equalToConstant: 22),
             
-            addTrackerName.topAnchor.constraint(equalTo: habitPageHeader.bottomAnchor, constant: 38),
-            addTrackerName.centerXAnchor.constraint(equalTo: habitPageHeader.centerXAnchor),
-            addTrackerName.heightAnchor.constraint(equalToConstant: 75),
-            addTrackerName.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            addTrackerName.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            addEventName.topAnchor.constraint(equalTo: eventPageHeader.bottomAnchor, constant: 38),
+            addEventName.centerXAnchor.constraint(equalTo: eventPageHeader.centerXAnchor),
+            addEventName.heightAnchor.constraint(equalToConstant: 75),
+            addEventName.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            addEventName.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             
-            trackersTableView.topAnchor.constraint(equalTo: addTrackerName.bottomAnchor, constant: 24),
-            trackersTableView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            trackersTableView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            trackersTableView.heightAnchor.constraint(equalToConstant: 149),
+            irregularEventTableView.topAnchor.constraint(equalTo: addEventName.bottomAnchor, constant: 24),
+            irregularEventTableView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            irregularEventTableView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            irregularEventTableView.heightAnchor.constraint(equalToConstant: 75),//149
             
-            emojiCollectionView.topAnchor.constraint(equalTo: trackersTableView.bottomAnchor, constant: 32),
+            emojiCollectionView.topAnchor.constraint(equalTo: irregularEventTableView.bottomAnchor, constant: 32),
             emojiCollectionView.heightAnchor.constraint(equalToConstant: 222),
             emojiCollectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 18),
             emojiCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -18),
@@ -187,8 +179,8 @@ final class NewHabitViewController: UIViewController {
             colorCollectionView.heightAnchor.constraint(equalToConstant: 222),
             colorCollectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 18),
             colorCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -18),
-            cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 16),
             
+            cancelButton.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor, constant: 16),
             cancelButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
             cancelButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
             cancelButton.trailingAnchor.constraint(equalTo: colorCollectionView.centerXAnchor, constant: -4),
@@ -201,12 +193,12 @@ final class NewHabitViewController: UIViewController {
         ])
     }
     
-    private func setupTrackersTableView() {
-        trackersTableView.delegate = self
-        trackersTableView.dataSource = self
-        trackersTableView.register(NewHabitTrackerViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
-        trackersTableView.layer.cornerRadius = 16
-        trackersTableView.separatorStyle = .none
+    private func setupIrregularEventTableView() {
+        irregularEventTableView.delegate = self
+        irregularEventTableView.dataSource = self
+        irregularEventTableView.register(IrregularEventCell.self, forCellReuseIdentifier: irregularEventCellReuseIdentifier)
+        irregularEventTableView.layer.cornerRadius = 16
+        irregularEventTableView.separatorStyle = .none
     }
     
     private func setupEmojiCollectionView() {
@@ -222,8 +214,7 @@ final class NewHabitViewController: UIViewController {
     }
     
     @objc private func clearTextField() {
-        addTrackerName.text = ""
-        clearButton.isHidden = true
+        addEventName.text = ""
     }
     
     @objc private func cancelButtonTapped() {
@@ -231,74 +222,44 @@ final class NewHabitViewController: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        guard let text = addTrackerName.text, !text.isEmpty,
-              let color = selectedColor,
-              let emoji = selectedEmoji else {
-        return
-    }
-        let newTracker = Tracker(name: text, color: color, emoji: emoji, schedule: self.selectedDays)
-        
-        trackersViewController?.appendTracker(tracker: newTracker)
+        guard let text = addEventName.text, !text.isEmpty,
+                let color = selectedColor,
+                let emoji = selectedEmoji else {
+            return
+        }
+        let newEvent = Tracker(name: text, color: color, emoji: emoji, schedule: TrackerSchedule.DaysOfTheWeek.allCases)
+        trackersViewController?.appendTracker(tracker: newEvent)
         trackersViewController?.reload()
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 }
 
-// MARK: - SelectedDays
-extension NewHabitViewController: SelectedDays {
-    func save(indicies: [Int]) {
-        for index in indicies {
-            self.selectedDays.append(TrackerSchedule.DaysOfTheWeek.allCases[index])
-        }
-    }
-}
-
 // MARK: - UITableViewDelegate
-extension NewHabitViewController: UITableViewDelegate {
+extension IrregularEventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 1 {
-            let scheduleViewController = ScheduleViewController()
-            scheduleViewController.newHabitViewController = self
-            present(scheduleViewController, animated: true, completion: nil)
-        }
-        trackersTableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let separatorInset: CGFloat = 16
-        let separatorWidth = tableView.bounds.width - separatorInset * 2
-        let separatorHeight: CGFloat = 1.0
-        let separatorX = separatorInset
-        let separatorY = cell.frame.height - separatorHeight
-        let separatorView = UIView(frame: CGRect(x: separatorX, y: separatorY, width: separatorWidth, height: separatorHeight))
-        separatorView.backgroundColor = .ypGray
-        cell.addSubview(separatorView)
+        irregularEventTableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
 // MARK: - UITableViewDataSource
-extension NewHabitViewController: UITableViewDataSource {
+extension IrregularEventViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as? NewHabitTrackerViewCell else { return UITableViewCell() }
-        if indexPath.row == 0 {
-            cell.update(with: "Категория")
-        } else if indexPath.row == 1 {
-            cell.update(with: "Расписание")
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: irregularEventCellReuseIdentifier, for: indexPath) as! IrregularEventCell
+        cell.titleLabel.text = "Категория"
         return cell
     }
 }
 
 // MARK: - UITextFieldDelegate
-extension NewHabitViewController: UITextFieldDelegate {
+extension IrregularEventViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         clearButton.isHidden = textField.text?.isEmpty ?? true
         if textField.text?.isEmpty ?? false {
@@ -317,14 +278,14 @@ extension NewHabitViewController: UITextFieldDelegate {
 }
 
 // MARK: - UICollectionViewDataSource
-extension NewHabitViewController: UICollectionViewDataSource {
+extension IrregularEventViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 18
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == emojiCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HabitEmojiCell", for: indexPath) as? HabitEmojiCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Event emoji cell", for: indexPath) as? EventEmojiCell else {
                 return UICollectionViewCell()
             }
             let emojiIndex = indexPath.item % emoji.count
@@ -335,7 +296,7 @@ extension NewHabitViewController: UICollectionViewDataSource {
             
             return cell
         } else if collectionView == colorCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HabitColorCell", for: indexPath) as? HabitColorCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Event color cell", for: indexPath) as? EventColorCell else {
                 return UICollectionViewCell()
             }
             
@@ -353,13 +314,13 @@ extension NewHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView:UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         if collectionView == emojiCollectionView {
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HabitEmojiHeader.id, for: indexPath) as? HabitEmojiHeader else {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: EventEmojiHeader.id, for: indexPath) as? EventEmojiHeader else {
                 return UICollectionReusableView()
             }
             header.headerText = "Emoji"
             return header
         } else if collectionView == colorCollectionView {
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HabitColorHeader.id, for: indexPath) as? HabitColorHeader else {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: EventColorHeader.id, for: indexPath) as? EventColorHeader else {
                 return UICollectionReusableView()
             }
             header.headerText = "Цвет"
@@ -371,7 +332,7 @@ extension NewHabitViewController: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension NewHabitViewController: UICollectionViewDelegateFlowLayout {
+extension IrregularEventViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionViewWidth = collectionView.bounds.width - 36
         let cellWidth = collectionViewWidth / 6
@@ -397,15 +358,15 @@ extension NewHabitViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - UICollectionViewDelegate
-extension NewHabitViewController: UICollectionViewDelegate {
+extension IrregularEventViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == emojiCollectionView {
-            let cell = collectionView.cellForItem(at: indexPath) as? HabitEmojiCell
+            let cell = collectionView.cellForItem(at: indexPath) as? EventEmojiCell
             cell?.backgroundColor = .ypLightGray
             
             selectedEmoji = cell?.emojiLabel.text
         } else if collectionView == colorCollectionView {
-            let cell = collectionView.cellForItem(at: indexPath) as? HabitColorCell
+            let cell = collectionView.cellForItem(at: indexPath) as? EventColorCell
             cell?.layer.borderWidth = 3
             cell?.layer.borderColor = cell?.colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
             
@@ -415,10 +376,10 @@ extension NewHabitViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if collectionView == emojiCollectionView {
-            let cell = collectionView.cellForItem(at: indexPath) as? HabitEmojiCell
+            let cell = collectionView.cellForItem(at: indexPath) as? EventEmojiCell
             cell?.backgroundColor = .ypWhiteDay
         } else if collectionView == colorCollectionView {
-            let cell = collectionView.cellForItem(at: indexPath) as? HabitColorCell
+            let cell = collectionView.cellForItem(at: indexPath) as? EventColorCell
             cell?.layer.borderWidth = 0
         }
     }

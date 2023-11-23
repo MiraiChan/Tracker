@@ -1,14 +1,15 @@
 //
-//  HabitColorHeader.swift
+//  EventEmojiHeader.swift
 //  Tracker
 //
-//  Created by Almira Khafizova on 21.11.23.
+//  Created by Almira Khafizova on 23.11.23.
 //
 
 import UIKit
 
-final class HabitColorHeader: UICollectionReusableView {
-    static let id = "HabitColorHeader"
+final class EventEmojiHeader: UICollectionReusableView {
+    
+    static let id = "header"
     var headerText: String? {
         didSet {
             titleLabel.text = headerText
