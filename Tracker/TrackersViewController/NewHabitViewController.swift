@@ -315,3 +315,112 @@ extension NewHabitViewController: UITextFieldDelegate {
         return true
     }
 }
+
+// MARK: - UICollectionViewDataSource
+extension NewHabitViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 18
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == emojiCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HabitEmojiCell", for: indexPath) as? HabitEmojiCell else {
+                return UICollectionViewCell()
+            }
+            let emojiIndex = indexPath.item % emoji.count
+            let selectedEmoji = emoji[emojiIndex]
+            
+            cell.emojiLabel.text = selectedEmoji
+            cell.layer.cornerRadius = 16
+            
+            return cell
+        } else if collectionView == colorCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HabitColorCell", for: indexPath) as? HabitColorCell else {
+                return UICollectionViewCell()
+            }
+            
+            let colorIndex = indexPath.item % colors.count
+            let selectedColor = colors[colorIndex]
+            
+            cell.colorView.backgroundColor = selectedColor
+            cell.layer.cornerRadius = 8
+            
+            return cell
+        }
+        return UICollectionViewCell()
+    }
+    
+    func collectionView(_ collectionView:UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if collectionView == emojiCollectionView {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HabitEmojiHeader.id, for: indexPath) as? HabitEmojiHeader else {
+                return UICollectionReusableView()
+            }
+            header.headerText = "Emoji"
+            return header
+        } else if collectionView == colorCollectionView {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HabitColorHeader.id, for: indexPath) as? HabitColorHeader else {
+                return UICollectionReusableView()
+            }
+            header.headerText = "Цвет"
+            return header
+        }
+        
+        return UICollectionReusableView()
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension NewHabitViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let collectionViewWidth = collectionView.bounds.width - 36
+        let cellWidth = collectionViewWidth / 6
+        return CGSize(width: cellWidth, height: cellWidth)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: 18)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 24, left: 0, bottom: 0, right: 0)
+    }
+    
+}
+
+// MARK: - UICollectionViewDelegate
+extension NewHabitViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == emojiCollectionView {
+            let cell = collectionView.cellForItem(at: indexPath) as? HabitEmojiCell
+            cell?.backgroundColor = .ypLightGray
+            
+            selectedEmoji = cell?.emojiLabel.text
+        } else if collectionView == colorCollectionView {
+            let cell = collectionView.cellForItem(at: indexPath) as? HabitColorCell
+            cell?.layer.borderWidth = 3
+            cell?.layer.borderColor = cell?.colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
+            
+            selectedColor = cell?.colorView.backgroundColor
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if collectionView == emojiCollectionView {
+            let cell = collectionView.cellForItem(at: indexPath) as? HabitEmojiCell
+            cell?.backgroundColor = .ypWhiteDay
+        } else if collectionView == colorCollectionView {
+            let cell = collectionView.cellForItem(at: indexPath) as? HabitColorCell
+            cell?.layer.borderWidth = 0
+        }
+    }
+}
+
