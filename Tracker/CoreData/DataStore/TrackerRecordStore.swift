@@ -13,6 +13,13 @@ protocol TrackerRecordStoreDelegate: AnyObject {
 }
 
 final class TrackerRecordStore: NSObject {
+    enum TrackerErrors: Error {
+        case missingRequiredValues
+        case invalidInput
+        case fetchError(Error)
+        
+    }
+    
     private var context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>!
     private let uiColorMarshalling = UIColorMarshalling()
@@ -60,24 +67,41 @@ final class TrackerRecordStore: NSObject {
     
     func removeTrackerRecord(_ trackerRecord: TrackerRecord?) throws {
         guard let toDelete = try self.fetchTrackerRecord(with: trackerRecord)
-        else { fatalError() }
+        else {
+            assertionFailure("Failed to fetch tracker record for deletion.")
+            return
+        }
         context.delete(toDelete)
-        try context.save()
+        do {
+            try context.save()
+        } catch {
+            assertionFailure("Failed to save context after deleting tracker record. Error: \(error)")
+        }
+        
     }
     
     func record(from trackerRecordCoreData: TrackerRecordCoreData) throws -> TrackerRecord {
         guard let id = trackerRecordCoreData.trackerId,
               let date = trackerRecordCoreData.date
-        else { fatalError() }
+        else {
+            assertionFailure("Failed to create TrackerRecord from TrackerRecordCoreData. Missing required values.")
+            throw TrackerErrors.missingRequiredValues
+        }
         return TrackerRecord(trackerId: id, date: date)
     }
     
     func fetchTrackerRecord(with trackerRecord: TrackerRecord?) throws -> TrackerRecordCoreData? {
-        guard let trackerRecord = trackerRecord else { fatalError() }
+        guard let trackerRecord = trackerRecord else {
+            throw TrackerErrors.invalidInput
+        }
         let fetchRequest: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", trackerRecord.trackerId as CVarArg)
-        let result = try context.fetch(fetchRequest)
-        return result.first
+        do {
+            let result = try context.fetch(fetchRequest)
+            return result.first
+        } catch {
+            throw TrackerErrors.fetchError(error)
+        }
     }
 }
 
@@ -86,6 +110,3 @@ extension TrackerRecordStore: NSFetchedResultsControllerDelegate {
         delegate?.storeRecord()
     }
 }
-
-
-

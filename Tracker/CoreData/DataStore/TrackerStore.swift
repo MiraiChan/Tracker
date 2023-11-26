@@ -2,7 +2,7 @@
 //  TrackerStore.swift
 //  Tracker
 //
-//  Created by Almira Khafizova on 25.11.23.
+//  Created by Almira Khafizova on 26.11.23.
 //
 
 import UIKit
@@ -13,11 +13,16 @@ protocol TrackerStoreDelegate: AnyObject {
 }
 
 final class TrackerStore: NSObject {
+    enum TrackerError: Error {
+        case invalidTrackerCoreData
+        case invalidScheduleValue(Int)
+    }
+    
     private var context: NSManagedObjectContext
     /* 1:   Контроллер объявлен как переменная с модификатором lazy
-            и инициализируется при первом обращении к нему.
-            Тип переменной NSFetchedResultsController<TrackerCoreData> указывает,
-            что у объектов, с которыми работает контроллер, тип TrackerCoreData. */
+     и инициализируется при первом обращении к нему.
+     Тип переменной NSFetchedResultsController<TrackerCoreData> указывает,
+     что у объектов, с которыми работает контроллер, тип TrackerCoreData. */
     private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>!
     private let uiColorMarshalling = UIColorMarshalling()
     
@@ -40,15 +45,15 @@ final class TrackerStore: NSObject {
         self.context = context
         super.init()
         /* 2:   Cоздаём запрос NSFetchRequest<TrackerCoreData> —
-        он работает с объектами типа TrackerCoreData.*/
+         он работает с объектами типа TrackerCoreData.*/
         let fetch = TrackerCoreData.fetchRequest()
         /* 3:   Обязательно указываем минимум один параметр сортировки. */
         fetch.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
         ]
         /* 4:   Для создания контроллера укажем два обязательных параметра:
-                - запрос NSFetchRequest — в нём содержится минимум один параметр сортировки;
-                - контекст NSManagedObjectContext — он нужен для выполнения запроса. */
+         - запрос NSFetchRequest — в нём содержится минимум один параметр сортировки;
+         - контекст NSManagedObjectContext — он нужен для выполнения запроса. */
         let controller = NSFetchedResultsController(
             fetchRequest: fetch,
             managedObjectContext: context,
@@ -68,9 +73,14 @@ final class TrackerStore: NSObject {
         trackerCoreData.name = tracker.name
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.emoji = tracker.emoji
-        trackerCoreData.schedule = tracker.schedule?.map {
-            $0.rawValue
+        
+        // перед использованием map проверяем, что schedule не nil
+        if let schedule = tracker.schedule {
+            trackerCoreData.schedule = schedule.map { (item: TrackerSchedule.DaysOfTheWeek) -> Int in
+                return item.rawValue
+            } as NSObject
         }
+        
         try context.save()
     }
     
@@ -79,11 +89,19 @@ final class TrackerStore: NSObject {
               let emoji = trackerCoreData.emoji,
               let color = uiColorMarshalling.color(from: trackerCoreData.color ?? ""),
               let name = trackerCoreData.name,
-              let schedule = trackerCoreData.schedule
+              let scheduleArray = trackerCoreData.schedule as? [Int]
         else {
-            fatalError()
+            throw TrackerError.invalidTrackerCoreData
         }
-        return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule.map({ TrackerSchedule.DaysOfTheWeek(rawValue: $0)!}))
+        
+        let schedule = try scheduleArray.map {
+            guard let day = TrackerSchedule.DaysOfTheWeek(rawValue: $0) else {
+                throw TrackerError.invalidScheduleValue($0)
+            }
+            return day
+        }
+        
+        return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule)
     }
 }
 //Делегат передает данные об изменениях.
@@ -96,4 +114,3 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
         delegate?.store()
     }
 }
-
