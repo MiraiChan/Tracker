@@ -8,6 +8,9 @@
 import UIKit
 
 final class TrackersViewController: UIViewController, UITextFieldDelegate {
+    private var trackerStore = TrackerStore()
+    private var trackerRecordStore = TrackerRecordStore()
+    
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
     private var filteredCategories: [TrackerCategory] = []
@@ -234,6 +237,13 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         collectionView.reloadData()
         showFirstPlaceholderScreen()
         showSecondPlaceholderScreen()
+    }
+}
+
+extension TrackersViewController: TrackerStoreDelegate {
+    func store() {
+        trackers = trackerStore.trackers
+        collectionView.reloadData()
     }
 }
 

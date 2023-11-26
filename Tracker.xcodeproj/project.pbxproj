@@ -46,6 +46,7 @@
 		01802C042B129D9C0052867D /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C032B129D9C0052867D /* TrackerStore.swift */; };
 		01802C062B129DB50052867D /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C052B129DB50052867D /* TrackerCategoryStore.swift */; };
 		01802C082B129DDF0052867D /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C072B129DDF0052867D /* TrackerRecordStore.swift */; };
+		01802C0C2B13EC690052867D /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C0B2B13EC690052867D /* UIColorMarshalling.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 		01802C032B129D9C0052867D /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		01802C052B129DB50052867D /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		01802C072B129DDF0052867D /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
+		01802C0B2B13EC690052867D /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,7 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				01802C022B129D730052867D /* CoreData */,
-				015B58432AFB8DEE00B9E485 /* Data */,
+				015B58432AFB8DEE00B9E485 /* DataMock */,
 				015B58102AEBE66D00B9E485 /* Application */,
 				015B58172AEC34FC00B9E485 /* Helpers */,
 				015B58202AF5A1B500B9E485 /* Models */,
@@ -302,23 +304,40 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		015B58432AFB8DEE00B9E485 /* Data */ = {
+		015B58432AFB8DEE00B9E485 /* DataMock */ = {
 			isa = PBXGroup;
 			children = (
 				015B58442AFB8E0A00B9E485 /* TrackersStorage.swift */,
 			);
-			path = Data;
+			path = DataMock;
 			sourceTree = "<group>";
 		};
 		01802C022B129D730052867D /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				01802C0A2B13EC470052867D /* CoreDataHelper */,
+				01802C092B13DEEA0052867D /* DataStore */,
 				015B57E62AEB032900B9E485 /* Tracker.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		01802C092B13DEEA0052867D /* DataStore */ = {
+			isa = PBXGroup;
+			children = (
 				01802C032B129D9C0052867D /* TrackerStore.swift */,
 				01802C052B129DB50052867D /* TrackerCategoryStore.swift */,
 				01802C072B129DDF0052867D /* TrackerRecordStore.swift */,
 			);
-			path = CoreData;
+			path = DataStore;
+			sourceTree = "<group>";
+		};
+		01802C0A2B13EC470052867D /* CoreDataHelper */ = {
+			isa = PBXGroup;
+			children = (
+				01802C0B2B13EC690052867D /* UIColorMarshalling.swift */,
+			);
+			path = CoreDataHelper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -471,6 +490,7 @@
 				0125124F2B0D5674000C1703 /* HabitColorCell.swift in Sources */,
 				015B58242AF5A1F600B9E485 /* TrackerCategory.swift in Sources */,
 				015B58452AFB8E0A00B9E485 /* TrackersStorage.swift in Sources */,
+				01802C0C2B13EC690052867D /* UIColorMarshalling.swift in Sources */,
 				015B57DE2AEB032900B9E485 /* AppDelegate.swift in Sources */,
 				015B58132AEBE6F400B9E485 /* TabBarController.swift in Sources */,
 				015B57E02AEB032900B9E485 /* SceneDelegate.swift in Sources */,
