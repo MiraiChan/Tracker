@@ -123,6 +123,11 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         addElements()
         configureCollectionView()
         setupConstraints()
+        
+        trackerStore.delegate = self
+        trackerRecordStore.delegate = self
+        trackers = trackerStore.trackers
+        completedTrackers = trackerRecordStore.trackerRecords
     }
     
     private func reloadData() {
@@ -261,8 +266,8 @@ extension TrackersViewController: UITextViewDelegate {
 // MARK: - TrackersActions
 extension TrackersViewController: TrackersActions {
     func appendTracker(tracker: Tracker) {
-        self.trackers.append(tracker)
-
+        try! self.trackerStore.addNewTracker(tracker)
+        
         self.categories = self.categories.map { category in
             if (category.title == "Радостные мелочи") {
                 var updatedTrackers = category.trackers
@@ -273,8 +278,8 @@ extension TrackersViewController: TrackersActions {
         }
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
-        
-
+    
+    
     func reload() {
         self.collectionView.reloadData()
     }
@@ -372,6 +377,13 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - TrackerCellDelegate
+extension TrackersViewController: TrackerRecordStoreDelegate {
+    func storeRecord() {
+        completedTrackers = trackerRecordStore.trackerRecords
+        collectionView.reloadData()
+    }
+}
 
 extension TrackersViewController: TrackerCellDelegate {
     func completeTracker (id: UUID, at indexPath: IndexPath) {
@@ -380,19 +392,17 @@ extension TrackersViewController: TrackerCellDelegate {
         let calendar = Calendar.current
         if calendar.compare(selectedDate, to: currentDate, toGranularity: .day) != .orderedDescending {
             let trackerRecord = TrackerRecord(trackerId: id, date: selectedDate)
-            completedTrackers.append(trackerRecord)
-            
-            collectionView.reloadItems(at: [indexPath])
+            try! self.trackerRecordStore.addNewTrackerRecord(trackerRecord)
         } else {
             return
         }
     }
     func incompleteTracker(id: UUID, at indexPath: IndexPath) {
-        completedTrackers.removeAll { trackerRecord in
-            isSameTrackerRecord(trackerRecord: trackerRecord, id: id)
+        let toRemove = completedTrackers.first {
+            isSameTrackerRecord(trackerRecord: $0, id: id)
         }
         
-        collectionView.reloadItems(at: [indexPath])
+        try! self.trackerRecordStore.removeTrackerRecord(toRemove)
     }
 }
 
