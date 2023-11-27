@@ -37,7 +37,9 @@ final class TrackerStore: NSObject {
     }
     
     convenience override init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).context
+        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.context else {
+            fatalError("Failed to obtain the Core Data context.")
+        }
         try! self.init(context: context)
     }
     
@@ -46,11 +48,14 @@ final class TrackerStore: NSObject {
         super.init()
         /* 2:   Cоздаём запрос NSFetchRequest<TrackerCoreData> —
          он работает с объектами типа TrackerCoreData.*/
-        let fetch = TrackerCoreData.fetchRequest()
+        let fetch = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
         /* 3:   Обязательно указываем минимум один параметр сортировки. */
         fetch.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
         ]
+        
+        print("Fetch Request: \(fetch)")
+        
         /* 4:   Для создания контроллера укажем два обязательных параметра:
          - запрос NSFetchRequest — в нём содержится минимум один параметр сортировки;
          - контекст NSManagedObjectContext — он нужен для выполнения запроса. */

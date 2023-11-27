@@ -45,7 +45,7 @@ final class TrackerRecordStore: NSObject {
         
         let fetch = TrackerRecordCoreData.fetchRequest()
         fetch.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerRecordCoreData.id, ascending: true)
+            NSSortDescriptor(keyPath: \TrackerRecordCoreData.trackerId, ascending: true)
         ]
         let controller = NSFetchedResultsController(
             fetchRequest: fetch,
