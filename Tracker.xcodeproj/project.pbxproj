@@ -42,7 +42,6 @@
 		015B58342AFA786100B9E485 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58332AFA786100B9E485 /* CategoryViewController.swift */; };
 		015B58362AFA78B300B9E485 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58352AFA78B300B9E485 /* ScheduleViewController.swift */; };
 		015B583C2AFA8EBB00B9E485 /* TrackerTitleSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B583B2AFA8EBB00B9E485 /* TrackerTitleSectionView.swift */; };
-		015B58452AFB8E0A00B9E485 /* TrackersStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58442AFB8E0A00B9E485 /* TrackersStorage.swift */; };
 		01802C062B129DB50052867D /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C052B129DB50052867D /* TrackerCategoryStore.swift */; };
 		01802C082B129DDF0052867D /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C072B129DDF0052867D /* TrackerRecordStore.swift */; };
 		01802C0C2B13EC690052867D /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C0B2B13EC690052867D /* UIColorMarshalling.swift */; };
@@ -106,7 +105,6 @@
 		015B58332AFA786100B9E485 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		015B58352AFA78B300B9E485 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		015B583B2AFA8EBB00B9E485 /* TrackerTitleSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTitleSectionView.swift; sourceTree = "<group>"; };
-		015B58442AFB8E0A00B9E485 /* TrackersStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersStorage.swift; sourceTree = "<group>"; };
 		01802C052B129DB50052867D /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		01802C072B129DDF0052867D /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
 		01802C0B2B13EC690052867D /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
@@ -307,7 +305,6 @@
 		015B58432AFB8DEE00B9E485 /* DataMock */ = {
 			isa = PBXGroup;
 			children = (
-				015B58442AFB8E0A00B9E485 /* TrackersStorage.swift */,
 			);
 			path = DataMock;
 			sourceTree = "<group>";
@@ -489,7 +486,6 @@
 				012512492B0B4BE5000C1703 /* IrregularEventCell.swift in Sources */,
 				0125124F2B0D5674000C1703 /* HabitColorCell.swift in Sources */,
 				015B58242AF5A1F600B9E485 /* TrackerCategory.swift in Sources */,
-				015B58452AFB8E0A00B9E485 /* TrackersStorage.swift in Sources */,
 				01802C0C2B13EC690052867D /* UIColorMarshalling.swift in Sources */,
 				015B57DE2AEB032900B9E485 /* AppDelegate.swift in Sources */,
 				015B58132AEBE6F400B9E485 /* TabBarController.swift in Sources */,

@@ -11,6 +11,9 @@ final class EventColorCell: UICollectionViewCell {
     
     static var reuseId = "Event color cell"
     
+    private let colorViewSize: CGFloat = 40.0
+    private let centerOffset: CGFloat = 2.0
+    
     let colorView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
@@ -26,10 +29,10 @@ final class EventColorCell: UICollectionViewCell {
         super.layoutSubviews()
         
         colorView.frame = CGRect(
-            x: (contentView.bounds.width - 40) / 2,
-            y: (contentView.bounds.height - 40) / 2,
-            width: 40,
-            height: 40
+            x: (contentView.bounds.width - colorViewSize) / centerOffset,
+            y: (contentView.bounds.height - colorViewSize) / centerOffset,
+            width: colorViewSize,
+            height: colorViewSize
         )
     }
     

@@ -11,7 +11,7 @@ final class EventEmojiCell: UICollectionViewCell {
     
     static var reuseId = "Event emoji cell"
     
-    let emojiLabel: UILabel = {
+    private lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 32)

@@ -38,7 +38,8 @@ final class TrackerStore: NSObject {
     
     convenience override init() {
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.context else {
-            fatalError("Failed to obtain the Core Data context.")
+            assertionFailure("Failed to obtain the Core Data context.")
+            return
         }
         try! self.init(context: context)
     }

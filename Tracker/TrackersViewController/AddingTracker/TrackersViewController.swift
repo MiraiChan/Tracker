@@ -16,8 +16,6 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private var filteredCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     
-    private let dataManager = TrackersStorage.shared
-    
     private var selectedDate: Int?
     private var filterText: String?
     
@@ -131,7 +129,8 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func reloadData() {
-        categories = dataManager.categories
+        let category = TrackerCategory(title: "Важное", trackers: trackers) //temporary hardcoded mock category
+        categories.append(category)
         showSecondPlaceholderScreen()
     }
     
@@ -269,7 +268,7 @@ extension TrackersViewController: TrackersActions {
         try! self.trackerStore.addNewTracker(tracker)
         
         self.categories = self.categories.map { category in
-            if (category.title == "Радостные мелочи") {
+            if (category.title == "Важное") {
                 var updatedTrackers = category.trackers
                 updatedTrackers.append(tracker)
                 return TrackerCategory(title: category.title, trackers: updatedTrackers)
