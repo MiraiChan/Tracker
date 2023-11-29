@@ -12,6 +12,7 @@ final class NewHabitTrackerViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -49,7 +50,18 @@ final class NewHabitTrackerViewCell: UITableViewCell {
     }
     
     func update(with title: String) {
-        titleLabel.text = title
-    }
-}
+        let attributedText = NSMutableAttributedString(string: title)
 
+          if let rangeOfNewLine = title.range(of: "\n") {
+              let rangeOfFirstLine = NSRange(title.startIndex..<rangeOfNewLine.lowerBound, in: title)
+              let rangeOfSecondLine = NSRange(rangeOfNewLine.upperBound..<title.endIndex, in: title)
+
+              attributedText.addAttribute(.foregroundColor, value: UIColor.ypBlackDay, range: rangeOfFirstLine)
+              attributedText.addAttribute(.foregroundColor, value: UIColor.ypGray, range: rangeOfSecondLine)
+          } else {
+              attributedText.addAttribute(.foregroundColor, value: UIColor.ypBlackDay, range: NSRange(title.startIndex..<title.endIndex, in: title))
+          }
+
+          titleLabel.attributedText = attributedText
+      }
+  }

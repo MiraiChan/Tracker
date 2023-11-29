@@ -188,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				01802C022B129D730052867D /* CoreData */,
-				015B58432AFB8DEE00B9E485 /* DataMock */,
 				015B58102AEBE66D00B9E485 /* Application */,
 				015B58172AEC34FC00B9E485 /* Helpers */,
 				015B58202AF5A1B500B9E485 /* Models */,
@@ -300,13 +299,6 @@
 				015B583B2AFA8EBB00B9E485 /* TrackerTitleSectionView.swift */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		015B58432AFB8DEE00B9E485 /* DataMock */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DataMock;
 			sourceTree = "<group>";
 		};
 		01802C022B129D730052867D /* CoreData */ = {

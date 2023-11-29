@@ -22,7 +22,6 @@ final class TrackerRecordStore: NSObject {
     
     private var context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>!
-    private let uiColorMarshalling = UIColorMarshalling()
     
     weak var delegate: TrackerRecordStoreDelegate?
     

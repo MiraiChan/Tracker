@@ -250,6 +250,7 @@ extension NewHabitViewController: SelectedDays {
     func save(indicies: [Int]) {
         for index in indicies {
             self.selectedDays.append(TrackerSchedule.DaysOfTheWeek.allCases[index])
+            self.trackersTableView.reloadData()
         }
     }
 }
@@ -265,6 +266,7 @@ extension NewHabitViewController: UITableViewDelegate {
             let scheduleViewController = ScheduleViewController()
             scheduleViewController.newHabitViewController = self
             present(scheduleViewController, animated: true, completion: nil)
+            selectedDays = []
         }
         trackersTableView.deselectRow(at: indexPath, animated: true)
     }
@@ -292,8 +294,23 @@ extension NewHabitViewController: UITableViewDataSource {
         if indexPath.row == 0 {
             cell.update(with: "Категория")
         } else if indexPath.row == 1 {
-            cell.update(with: "Расписание")
+            var subtitle = ""
+            
+            if !selectedDays.isEmpty {
+                if selectedDays.count == 7 {
+                    subtitle = "Каждый день"
+                } else {
+                    subtitle = selectedDays.map { $0.shortName }.joined(separator: ", ")
+                }
+            }
+            
+            if !subtitle.isEmpty {
+                cell.update(with: "Расписание\n" + subtitle)
+            } else {
+                cell.update(with: "Расписание")
+            }
         }
+        
         return cell
     }
 }
