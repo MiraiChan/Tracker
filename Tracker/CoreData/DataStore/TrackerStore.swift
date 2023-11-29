@@ -24,7 +24,6 @@ final class TrackerStore: NSObject {
      Тип переменной NSFetchedResultsController<TrackerCoreData> указывает,
      что у объектов, с которыми работает контроллер, тип TrackerCoreData. */
     private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>!
-    private let uiColorMarshalling = UIColorMarshalling()
     
     weak var delegate: TrackerStoreDelegate?
     
@@ -38,8 +37,7 @@ final class TrackerStore: NSObject {
     
     convenience override init() {
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.context else {
-            assertionFailure("Failed to obtain the Core Data context.")
-            return
+            preconditionFailure("Failed to obtain the Core Data context.")
         }
         try! self.init(context: context)
     }
@@ -54,8 +52,6 @@ final class TrackerStore: NSObject {
         fetch.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
         ]
-        
-        print("Fetch Request: \(fetch)")
         
         /* 4:   Для создания контроллера укажем два обязательных параметра:
          - запрос NSFetchRequest — в нём содержится минимум один параметр сортировки;
@@ -77,7 +73,7 @@ final class TrackerStore: NSObject {
         let trackerCoreData = TrackerCoreData(context: context)
         trackerCoreData.id = tracker.id
         trackerCoreData.name = tracker.name
-        trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
+        trackerCoreData.color = UIColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.emoji = tracker.emoji
         
         // перед использованием map проверяем, что schedule не nil
@@ -93,7 +89,7 @@ final class TrackerStore: NSObject {
     func tracker(from trackerCoreData: TrackerCoreData) throws -> Tracker {
         guard let id = trackerCoreData.id,
               let emoji = trackerCoreData.emoji,
-              let color = uiColorMarshalling.color(from: trackerCoreData.color ?? ""),
+              let color = UIColorMarshalling.color(from: trackerCoreData.color ?? ""),
               let name = trackerCoreData.name,
               let scheduleArray = trackerCoreData.schedule as? [Int]
         else {
