@@ -18,6 +18,12 @@ final class HabitEmojiCell: UICollectionViewCell {
         return label
     }()
     
+    override var isSelected: Bool {
+        didSet {
+            contentView.backgroundColor = isSelected ? .ypLightGray : .ypWhiteDay
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -30,7 +36,12 @@ final class HabitEmojiCell: UICollectionViewCell {
     }
     
     required init?(coder: NSCoder) {
-        assertionFailure("init(coder:) has not been implemented")
-        return nil
+        super.init(coder: coder)
+        contentView.addSubview(emojiLabel)
+        
+        NSLayoutConstraint.activate([
+            emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
     }
 }

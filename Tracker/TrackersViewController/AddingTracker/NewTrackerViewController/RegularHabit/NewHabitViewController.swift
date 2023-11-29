@@ -14,6 +14,9 @@ protocol TrackersActions {
 }
 
 final class NewHabitViewController: UIViewController {
+    private var backingIsScheduleSet: Bool = false
+    private var backingIsEmojiSelected: Bool = false
+    private var backingIsColorSelected: Bool = false
     
     var trackersViewController: TrackersActions?
     let cellReuseIdentifier = "NewHabitTableViewController"
@@ -22,6 +25,8 @@ final class NewHabitViewController: UIViewController {
     private var selectedEmoji: String?
     
     private var selectedDays: [TrackerSchedule.DaysOfTheWeek] = []
+    private var category: String? = nil
+    
     private let colors: [UIColor] = [
         .ypColorSelection1, .ypColorSelection2, .ypColorSelection3,
         .ypColorSelection4, .ypColorSelection5, .ypColorSelection6,
@@ -35,6 +40,27 @@ final class NewHabitViewController: UIViewController {
         "🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶",
         "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
     ]
+    
+    private var isNameEntered: Bool {
+        return !(addTrackerName.text?.isEmpty ?? true)
+    }
+    
+    private var isCategorySelected: Bool {
+        //TODO: add the logic to check if a category is selected
+        return true // Replace this with your actual check
+    }
+    
+    private var isScheduleSet: Bool {
+        return !selectedDays.isEmpty
+    }
+    
+    private var isEmojiSelected: Bool {
+        return selectedEmoji != nil
+    }
+    
+    private var isColorSelected: Bool {
+        return selectedColor != nil
+    }
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -52,7 +78,7 @@ final class NewHabitViewController: UIViewController {
         return header
     }()
     
-    private let addTrackerName: UITextField = {
+    private lazy var addTrackerName: UITextField = {
         let addTrackerName = UITextField()
         addTrackerName.translatesAutoresizingMaskIntoConstraints = false
         addTrackerName.placeholder = "Введите название трекера"
@@ -140,6 +166,8 @@ final class NewHabitViewController: UIViewController {
         
         addTrackerName.delegate = self
         
+        updateCreateButtonState()
+        
         setupTrackersTableView()
         setupEmojiCollectionView()
         setupColorCollectionView()
@@ -222,9 +250,24 @@ final class NewHabitViewController: UIViewController {
         colorCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    private func updateCreateButtonState() {
+        print("Name entered: \(isNameEntered)")
+        print("Schedule set: \(isScheduleSet)")
+        print("Emoji selected: \(isEmojiSelected)")
+        print("Color selected: \(isColorSelected)")
+        createButton.isEnabled = isNameEntered && isScheduleSet && isEmojiSelected && isColorSelected
+        
+        if createButton.isEnabled {
+            createButton.backgroundColor = .ypBlackDay
+        } else {
+            createButton.backgroundColor = .ypGray
+        }
+    }
+    
     @objc private func clearTextField() {
         addTrackerName.text = ""
         clearButton.isHidden = true
+        updateCreateButtonState()
     }
     
     @objc private func cancelButtonTapped() {
@@ -232,12 +275,12 @@ final class NewHabitViewController: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        guard let text = addTrackerName.text, !text.isEmpty,
-              let color = selectedColor,
-              let emoji = selectedEmoji else {
+        guard isNameEntered, isScheduleSet, isEmojiSelected, isColorSelected else {
+            //TODO: Show an alert or handle the case where not all conditions are met
             return
         }
-        let newTracker = Tracker(id: UUID(), name: text, color: color, emoji: emoji, schedule: self.selectedDays)
+        
+        let newTracker = Tracker(id: UUID(), name: addTrackerName.text!, color: selectedColor!, emoji: selectedEmoji!, schedule: self.selectedDays)
         
         trackersViewController?.appendTracker(tracker: newTracker)
         trackersViewController?.reload()
@@ -247,11 +290,20 @@ final class NewHabitViewController: UIViewController {
 
 // MARK: - SelectedDays
 extension NewHabitViewController: SelectedDays {
-    func save(indicies: [Int]) {
-        for index in indicies {
-            self.selectedDays.append(TrackerSchedule.DaysOfTheWeek.allCases[index])
-            self.trackersTableView.reloadData()
-        }
+    func save(indicies: [Int], emoji: String?, color: UIColor?) {
+        self.selectedDays = indicies.map { TrackerSchedule.DaysOfTheWeek.allCases[$0] }
+        self.selectedEmoji = emoji
+        self.selectedColor = color
+        
+        self.trackersTableView.reloadData()
+        
+        // Update the state variables
+        backingIsScheduleSet = !selectedDays.isEmpty
+        backingIsEmojiSelected = selectedEmoji != nil
+        backingIsColorSelected = selectedColor != nil
+        
+        // Update the button state
+        updateCreateButtonState()
     }
 }
 
@@ -318,14 +370,7 @@ extension NewHabitViewController: UITableViewDataSource {
 // MARK: - UITextFieldDelegate
 extension NewHabitViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        clearButton.isHidden = textField.text?.isEmpty ?? true
-        if textField.text?.isEmpty ?? false {
-            createButton.isEnabled = false
-            createButton.backgroundColor = .ypGray
-        } else {
-            createButton.isEnabled = true
-            createButton.backgroundColor = .ypBlackDay
-        }
+        updateCreateButtonState()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -428,6 +473,7 @@ extension NewHabitViewController: UICollectionViewDelegate {
             cell?.layer.borderColor = cell?.colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
             
             selectedColor = cell?.colorView.backgroundColor
+            updateCreateButtonState()
         }
     }
     
@@ -438,6 +484,12 @@ extension NewHabitViewController: UICollectionViewDelegate {
         } else if collectionView == colorCollectionView {
             let cell = collectionView.cellForItem(at: indexPath) as? HabitColorCell
             cell?.layer.borderWidth = 0
+            
+            // Deselecting a color, set selectedColor to nil
+            selectedColor = nil
+            
+            // Update the selection state
+            updateCreateButtonState()
         }
     }
 }
