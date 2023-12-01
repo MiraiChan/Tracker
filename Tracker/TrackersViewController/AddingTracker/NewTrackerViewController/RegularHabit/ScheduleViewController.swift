@@ -7,13 +7,16 @@
 
 import UIKit
 
-protocol SelectedDays {
-    func save(indicies: [Int])
+protocol SelectedDays: AnyObject {
+    func save(indicies: [Int], emoji: String?, color: UIColor?)
 }
 
 final class ScheduleViewController: UIViewController {
     let scheduleCellReuseIdentifier = "ScheduleTableViewCell"
     var newHabitViewController: SelectedDays?
+    private var selectedEmoji: String?
+    private var selectedColor: UIColor?
+    
     
     private let schedulePageTitle: UILabel = {
         let title = UILabel()
@@ -88,7 +91,7 @@ final class ScheduleViewController: UIViewController {
                 selected.append(index)
             }
         }
-        self.newHabitViewController?.save(indicies: selected)
+        newHabitViewController?.save(indicies: selected, emoji: selectedEmoji, color: selectedColor)
         dismiss(animated: true)
     }
 }

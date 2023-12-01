@@ -8,12 +8,13 @@
 import UIKit
 
 final class TrackersViewController: UIViewController, UITextFieldDelegate {
+    private var trackerStore = TrackerStore()
+    private var trackerRecordStore = TrackerRecordStore()
+    
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
     private var filteredCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
-    
-    private let dataManager = TrackersStorage.shared
     
     private var selectedDate: Int?
     private var filterText: String?
@@ -120,10 +121,16 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         addElements()
         configureCollectionView()
         setupConstraints()
+        
+        trackerStore.delegate = self
+        trackerRecordStore.delegate = self
+        trackers = trackerStore.trackers
+        completedTrackers = trackerRecordStore.trackerRecords
     }
     
     private func reloadData() {
-        categories = dataManager.categories
+        let category = TrackerCategory(title: "Важное", trackers: trackers) //temporary hardcoded mock category
+        categories.append(category)
         showSecondPlaceholderScreen()
     }
     
@@ -237,6 +244,13 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+extension TrackersViewController: TrackerStoreDelegate {
+    func store() {
+        trackers = trackerStore.trackers
+        collectionView.reloadData()
+    }
+}
+
 extension TrackersViewController: UITextViewDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         self.filterText = textField.text
@@ -251,10 +265,10 @@ extension TrackersViewController: UITextViewDelegate {
 // MARK: - TrackersActions
 extension TrackersViewController: TrackersActions {
     func appendTracker(tracker: Tracker) {
-        self.trackers.append(tracker)
-
+        try! self.trackerStore.addNewTracker(tracker)
+        
         self.categories = self.categories.map { category in
-            if (category.title == "Радостные мелочи") {
+            if (category.title == "Важное") {
                 var updatedTrackers = category.trackers
                 updatedTrackers.append(tracker)
                 return TrackerCategory(title: category.title, trackers: updatedTrackers)
@@ -263,8 +277,8 @@ extension TrackersViewController: TrackersActions {
         }
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
-        
-
+    
+    
     func reload() {
         self.collectionView.reloadData()
     }
@@ -362,6 +376,13 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - TrackerCellDelegate
+extension TrackersViewController: TrackerRecordStoreDelegate {
+    func storeRecord() {
+        completedTrackers = trackerRecordStore.trackerRecords
+        collectionView.reloadData()
+    }
+}
 
 extension TrackersViewController: TrackerCellDelegate {
     func completeTracker (id: UUID, at indexPath: IndexPath) {
@@ -370,19 +391,17 @@ extension TrackersViewController: TrackerCellDelegate {
         let calendar = Calendar.current
         if calendar.compare(selectedDate, to: currentDate, toGranularity: .day) != .orderedDescending {
             let trackerRecord = TrackerRecord(trackerId: id, date: selectedDate)
-            completedTrackers.append(trackerRecord)
-            
-            collectionView.reloadItems(at: [indexPath])
+            try! self.trackerRecordStore.addNewTrackerRecord(trackerRecord)
         } else {
             return
         }
     }
     func incompleteTracker(id: UUID, at indexPath: IndexPath) {
-        completedTrackers.removeAll { trackerRecord in
-            isSameTrackerRecord(trackerRecord: trackerRecord, id: id)
+        let toRemove = completedTrackers.first {
+            isSameTrackerRecord(trackerRecord: $0, id: id)
         }
         
-        collectionView.reloadItems(at: [indexPath])
+        try! self.trackerRecordStore.removeTrackerRecord(toRemove)
     }
 }
 
