@@ -46,6 +46,7 @@
 		01802C082B129DDF0052867D /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C072B129DDF0052867D /* TrackerRecordStore.swift */; };
 		01802C0C2B13EC690052867D /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C0B2B13EC690052867D /* UIColorMarshalling.swift */; };
 		01802C122B1401010052867D /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C112B1401010052867D /* TrackerStore.swift */; };
+		01802C152B1D2B4F0052867D /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C142B1D2B4F0052867D /* OnboardingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 		01802C072B129DDF0052867D /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
 		01802C0B2B13EC690052867D /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
 		01802C112B1401010052867D /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
+		01802C142B1D2B4F0052867D /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 		015B57DC2AEB032900B9E485 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				01802C132B1D2B0F0052867D /* Onboarding */,
 				01802C022B129D730052867D /* CoreData */,
 				015B58102AEBE66D00B9E485 /* Application */,
 				015B58172AEC34FC00B9E485 /* Helpers */,
@@ -327,6 +330,14 @@
 				01802C0B2B13EC690052867D /* UIColorMarshalling.swift */,
 			);
 			path = CoreDataHelper;
+			sourceTree = "<group>";
+		};
+		01802C132B1D2B0F0052867D /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				01802C142B1D2B4F0052867D /* OnboardingViewController.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -491,6 +502,7 @@
 				012512572B0F573E000C1703 /* EventEmojiCell.swift in Sources */,
 				012512552B0F56DE000C1703 /* EventEmojiHeader.swift in Sources */,
 				015B581F2AF3EF3600B9E485 /* NewTrackerViewController.swift in Sources */,
+				01802C152B1D2B4F0052867D /* OnboardingViewController.swift in Sources */,
 				015B58162AEC2E8800B9E485 /* TrackersViewController.swift in Sources */,
 				015B583C2AFA8EBB00B9E485 /* TrackerTitleSectionView.swift in Sources */,
 			);
