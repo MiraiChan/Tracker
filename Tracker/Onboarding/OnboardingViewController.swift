@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class OnboardingViewController : UIPageViewController {
+final class OnboardingViewController: UIPageViewController {
     private var pages: [UIViewController] = []
     
     private lazy var pageControl: UIPageControl = {
