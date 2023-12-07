@@ -11,6 +11,8 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private var trackerStore = TrackerStore()
     private var trackerRecordStore = TrackerRecordStore()
     
+    private(set) var categoryViewModel: CategoryViewModel = CategoryViewModel.shared
+    
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
     private var filteredCategories: [TrackerCategory] = []
@@ -126,11 +128,10 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         trackerRecordStore.delegate = self
         trackers = trackerStore.trackers
         completedTrackers = trackerRecordStore.trackerRecords
+        categories = categoryViewModel.categories
     }
     
     private func reloadData() {
-        let category = TrackerCategory(title: "Важное", trackers: trackers) //temporary hardcoded mock category
-        categories.append(category)
         showSecondPlaceholderScreen()
     }
     
@@ -142,7 +143,6 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private func setupNav() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: plusButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePickerButton)
-        
     }
     
     private func addElements() {
@@ -264,21 +264,28 @@ extension TrackersViewController: UITextViewDelegate {
 
 // MARK: - TrackersActions
 extension TrackersViewController: TrackersActions {
-    func appendTracker(tracker: Tracker) {
+    func appendTracker(tracker: Tracker, category: String?) {
+        guard let category = category else { return }
         try! self.trackerStore.addNewTracker(tracker)
-        
-        self.categories = self.categories.map { category in
-            if (category.title == "Важное") {
-                var updatedTrackers = category.trackers
-                updatedTrackers.append(tracker)
-                return TrackerCategory(title: category.title, trackers: updatedTrackers)
+        let foundCategory = self.categories.first { currentCategory in
+            currentCategory.title == category
+        }
+        if foundCategory != nil {
+            self.categories = self.categories.map { currentCategory in
+                if (currentCategory.title == category) {
+                    var updatedTrackers = currentCategory.trackers
+                    updatedTrackers.append(tracker)
+                    return TrackerCategory(title: currentCategory.title, trackers: updatedTrackers)
+                } else {
+                    return TrackerCategory(title: currentCategory.title, trackers: currentCategory.trackers)
+                }
             }
-            return category
+        } else {
+            self.categories.append(TrackerCategory(title: category, trackers: [tracker]))
         }
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
-    
-    
+  
     func reload() {
         self.collectionView.reloadData()
     }

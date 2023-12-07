@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TrackersActions {
-    func appendTracker(tracker: Tracker)
+    func appendTracker(tracker: Tracker, category: String?)
     func reload()
     func showFirstPlaceholderScreen()
 }
@@ -21,11 +21,14 @@ final class NewHabitViewController: UIViewController {
     var trackersViewController: TrackersActions?
     let cellReuseIdentifier = "NewHabitTableViewController"
     
+    private var selectedCategory: String?
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
     
     private var selectedDays: [TrackerSchedule.DaysOfTheWeek] = []
     private var category: String? = nil
+    
+    private let addCategoryViewController = CategoryViewController()
     
     private let colors: [UIColor] = [
         .ypColorSelection1, .ypColorSelection2, .ypColorSelection3,
@@ -282,7 +285,8 @@ final class NewHabitViewController: UIViewController {
         
         let newTracker = Tracker(id: UUID(), name: addTrackerName.text!, color: selectedColor!, emoji: selectedEmoji!, schedule: self.selectedDays)
         
-        trackersViewController?.appendTracker(tracker: newTracker)
+        trackersViewController?.appendTracker(tracker: newTracker, category: self.selectedCategory)
+        addCategoryViewController.viewModel.addTrackerToCategory(to: self.selectedCategory, tracker: newTracker)
         trackersViewController?.reload()
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
