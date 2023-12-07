@@ -21,11 +21,11 @@ final class CategoryViewController: UIViewController {
         return header
     }()
     
-    private let emptyCategoryLogo: UIImageView = {
-        let emptyTrackersLogo = UIImageView()
-        emptyTrackersLogo.translatesAutoresizingMaskIntoConstraints = false
-        emptyTrackersLogo.image = UIImage(named: "Empty trackers")
-        return emptyTrackersLogo
+    private let emptyCategoryPlaceholder: UIImageView = {
+        let emptyTrackersImage = UIImageView()
+        emptyTrackersImage.translatesAutoresizingMaskIntoConstraints = false
+        emptyTrackersImage.image = UIImage(named: "Blank_page_image_placeholder")
+        return emptyTrackersImage
     }()
     
     private let emptyCategoryText: UILabel = {
@@ -41,15 +41,15 @@ final class CategoryViewController: UIViewController {
     }()
     
     private lazy var addCategory: UIButton = {
-        let habitButton = UIButton(type: .custom)
-        habitButton.setTitle("Добавить категорию", for: .normal)
-        habitButton.setTitleColor(.ypWhiteDay, for: .normal)
-        habitButton.backgroundColor = .ypBlackDay
-        habitButton.layer.cornerRadius = 16
-        habitButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        habitButton.addTarget(self, action: #selector(addCategoryTapped), for: .touchUpInside)
-        habitButton.translatesAutoresizingMaskIntoConstraints = false
-        return habitButton
+        let addCategoryButton = UIButton(type: .custom)
+        addCategoryButton.setTitle("Добавить категорию", for: .normal)
+        addCategoryButton.setTitleColor(.ypWhiteDay, for: .normal)
+        addCategoryButton.backgroundColor = .ypBlackDay
+        addCategoryButton.layer.cornerRadius = 16
+        addCategoryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        addCategoryButton.addTarget(self, action: #selector(addCategoryTapped), for: .touchUpInside)
+        addCategoryButton.translatesAutoresizingMaskIntoConstraints = false
+        return addCategoryButton
     }()
     
     private let categoriesTableView: UITableView = {
@@ -67,34 +67,12 @@ final class CategoryViewController: UIViewController {
         view.backgroundColor = .ypWhiteDay
         addSubviews()
         setupTrackersTableView()
-        
-        NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: view.topAnchor),
-            view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            categotyHeader.topAnchor.constraint(equalTo: view.topAnchor, constant: 26),
-            categotyHeader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            categoriesTableView.topAnchor.constraint(equalTo: categotyHeader.bottomAnchor, constant: 38),
-            categoriesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            categoriesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            categoriesTableView.bottomAnchor.constraint(equalTo: addCategory.topAnchor, constant: -16),
-            emptyCategoryLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyCategoryLogo.topAnchor.constraint(equalTo: categotyHeader.bottomAnchor, constant: 246),
-            emptyCategoryLogo.heightAnchor.constraint(equalToConstant: 80),
-            emptyCategoryLogo.widthAnchor.constraint(equalToConstant: 80),
-            emptyCategoryText.centerXAnchor.constraint(equalTo: emptyCategoryLogo.centerXAnchor),
-            emptyCategoryText.topAnchor.constraint(equalTo: emptyCategoryLogo.bottomAnchor, constant: 8),
-            addCategory.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            addCategory.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            addCategory.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            addCategory.heightAnchor.constraint(equalToConstant: 60)
-        ])
+        setupConstraints()
     }
     
     private func addSubviews() {
         view.addSubview(categotyHeader)
-        view.addSubview(emptyCategoryLogo)
+        view.addSubview(emptyCategoryPlaceholder)
         view.addSubview(emptyCategoryText)
         view.addSubview(addCategory)
         view.addSubview(categoriesTableView)
@@ -106,14 +84,54 @@ final class CategoryViewController: UIViewController {
         categoriesTableView.register(CategoryCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         if !viewModel.categories.isEmpty {
             categoriesTableView.isHidden = false
-            emptyCategoryLogo.isHidden = true
+            emptyCategoryPlaceholder.isHidden = true
             emptyCategoryText.isHidden = true
         }
     }
     
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: view.topAnchor),
+            view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            categotyHeader.topAnchor.constraint(equalTo: view.topAnchor, constant: 26),
+            categotyHeader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            categoriesTableView.topAnchor.constraint(equalTo: categotyHeader.bottomAnchor, constant: 38),
+            categoriesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            categoriesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            categoriesTableView.bottomAnchor.constraint(equalTo: addCategory.topAnchor, constant: -16),
+            emptyCategoryPlaceholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyCategoryPlaceholder.topAnchor.constraint(equalTo: categotyHeader.bottomAnchor, constant: 246),
+            emptyCategoryPlaceholder.heightAnchor.constraint(equalToConstant: 80),
+            emptyCategoryPlaceholder.widthAnchor.constraint(equalToConstant: 80),
+            emptyCategoryText.centerXAnchor.constraint(equalTo: emptyCategoryPlaceholder.centerXAnchor),
+            emptyCategoryText.topAnchor.constraint(equalTo: emptyCategoryPlaceholder.bottomAnchor, constant: 8),
+            addCategory.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            addCategory.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            addCategory.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            addCategory.heightAnchor.constraint(equalToConstant: 60)
+        ])
+    }
+    
     @objc private func addCategoryTapped() {
         let сreateCategoryViewController = CreateCategoryViewController()
+        сreateCategoryViewController.categoryViewController = self
         present(сreateCategoryViewController, animated: true, completion: nil)
+    }
+}
+
+// MARK: - CategoryActions
+extension CategoryViewController: CategoryActions {
+    func appendCategory(category: String) {
+        viewModel.addCategory(category)
+        categoriesTableView.isHidden = false
+        emptyCategoryPlaceholder.isHidden = true
+        emptyCategoryText.isHidden = true
+    }
+    
+    func reload() {
+        self.categoriesTableView.reloadData()
     }
 }
 
@@ -126,6 +144,16 @@ extension CategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.row < viewModel.categories.count else {
             return
+        }
+        
+        if let cell = tableView.cellForRow(at: indexPath) as? CategoryCell {
+            cell.done(with: UIImage(named: "Checkmark") ?? UIImage())
+            viewModel.selectCategory(indexPath.row)
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -153,8 +181,28 @@ extension CategoryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as? CategoryCell else { return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as? CategoryCell else { return UITableViewCell() }
+        
+        if indexPath.row < viewModel.categories.count {
+            let category = viewModel.categories[indexPath.row]
+            cell.update(with: category.title)
+            if let selected = viewModel.selectedCategory {
+                if selected.title == category.title {
+                    cell.done(with: UIImage(named: "Checkmark") ?? UIImage())
+                }
+            }
+            
+            let isLastCell = indexPath.row == viewModel.categories.count - 1
+            if isLastCell {
+                cell.layer.cornerRadius = 16
+                cell.layer.masksToBounds = true
+                cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            } else {
+                cell.layer.cornerRadius = 0
+                cell.layer.masksToBounds = false
+            }
         }
+        return cell
     }
 }
 

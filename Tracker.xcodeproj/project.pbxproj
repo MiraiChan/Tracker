@@ -50,6 +50,7 @@
 		01802C182B212FE30052867D /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C172B212FE30052867D /* CategoryViewModel.swift */; };
 		01802C1A2B21305F0052867D /* CreateCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C192B21305F0052867D /* CreateCategoryViewController.swift */; };
 		01802C1C2B2130D30052867D /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C1B2B2130D30052867D /* CategoryCell.swift */; };
+		01802C1E2B2135310052867D /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C1D2B2135310052867D /* Observable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +118,7 @@
 		01802C172B212FE30052867D /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
 		01802C192B21305F0052867D /* CreateCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCategoryViewController.swift; sourceTree = "<group>"; };
 		01802C1B2B2130D30052867D /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		01802C1D2B2135310052867D /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +355,7 @@
 				01802C172B212FE30052867D /* CategoryViewModel.swift */,
 				01802C192B21305F0052867D /* CreateCategoryViewController.swift */,
 				01802C1B2B2130D30052867D /* CategoryCell.swift */,
+				01802C1D2B2135310052867D /* Observable.swift */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -500,6 +503,7 @@
 				0125124D2B0D393D000C1703 /* HabitEmojiHeader.swift in Sources */,
 				012512592B0F5821000C1703 /* EventColorCell.swift in Sources */,
 				015B58342AFA786100B9E485 /* CategoryViewController.swift in Sources */,
+				01802C1E2B2135310052867D /* Observable.swift in Sources */,
 				015B58262AF5A21000B9E485 /* TrackerRecord.swift in Sources */,
 				015B58222AF5A1DB00B9E485 /* Tracker.swift in Sources */,
 				01802C122B1401010052867D /* TrackerStore.swift in Sources */,
