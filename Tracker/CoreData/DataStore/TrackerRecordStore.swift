@@ -94,7 +94,7 @@ final class TrackerRecordStore: NSObject {
             throw TrackerErrors.invalidInput
         }
         let fetchRequest: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerRecord.trackerId as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "trackerId == %@", trackerRecord.trackerId as CVarArg)
         do {
             let result = try context.fetch(fetchRequest)
             return result.first

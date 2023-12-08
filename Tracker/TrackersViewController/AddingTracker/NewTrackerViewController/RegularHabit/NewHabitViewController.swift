@@ -254,10 +254,6 @@ final class NewHabitViewController: UIViewController {
     }
     
     private func updateCreateButtonState() {
-        print("Name entered: \(isNameEntered)")
-        print("Schedule set: \(isScheduleSet)")
-        print("Emoji selected: \(isEmojiSelected)")
-        print("Color selected: \(isColorSelected)")
         createButton.isEnabled = isNameEntered && isScheduleSet && isEmojiSelected && isColorSelected
         
         if createButton.isEnabled {
@@ -284,7 +280,6 @@ final class NewHabitViewController: UIViewController {
         }
         
         let newTracker = Tracker(id: UUID(), name: addTrackerName.text!, color: selectedColor!, emoji: selectedEmoji!, schedule: self.selectedDays)
-        // Ensure there's a valid selected category before proceeding
         guard let selectedCategory = self.selectedCategory else {
             //TODO: Handle the case where there's no selected category (display an alert)
             return

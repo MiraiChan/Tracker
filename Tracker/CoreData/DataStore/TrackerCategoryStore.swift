@@ -84,12 +84,7 @@ final class TrackerCategoryStore: NSObject {
         
         let filteredTrackers = trackerStore.trackers.filter { tracker in
             let trackerID = tracker.id
-            return rawTrackers.contains(where: { (rawTracker) -> Bool in
-                if let rawTrackerID = rawTracker as? UUID {
-                    return rawTrackerID == trackerID
-                }
-                return false
-            })
+            return rawTrackers.contains(trackerID)
         }
         
         return TrackerCategory(title: title, trackers: filteredTrackers)

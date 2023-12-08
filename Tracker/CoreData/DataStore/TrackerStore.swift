@@ -77,13 +77,9 @@ final class TrackerStore: NSObject {
         trackerCoreData.color = UIColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.emoji = tracker.emoji
         
-        // перед использованием map проверяем, что schedule не nil
-        if let schedule = tracker.schedule {
-            trackerCoreData.schedule = schedule.map { (item: TrackerSchedule.DaysOfTheWeek) -> Int in
-                return item.rawValue
-            } as NSObject
+        trackerCoreData.schedule = tracker.schedule?.map {
+            $0.rawValue
         }
-        
         try context.save()
     }
     
@@ -92,7 +88,7 @@ final class TrackerStore: NSObject {
               let emoji = trackerCoreData.emoji,
               let color = UIColorMarshalling.color(from: trackerCoreData.color ?? ""),
               let name = trackerCoreData.name,
-              let scheduleArray = trackerCoreData.schedule as? [Int]
+              let scheduleArray = trackerCoreData.schedule
         else {
             throw TrackerError.invalidTrackerCoreData
         }

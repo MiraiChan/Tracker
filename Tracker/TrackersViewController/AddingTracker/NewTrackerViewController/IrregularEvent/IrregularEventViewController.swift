@@ -8,12 +8,15 @@
 import UIKit
 
 final class IrregularEventViewController: UIViewController {
+    private var backingIsEmojiSelected: Bool = false
+    private var backingIsColorSelected: Bool = false
+    
     let irregularEventCellReuseIdentifier = "IrregularEventTableViewCell"
     var trackersViewController: TrackersActions?
     
     private let addCategoryViewController = CategoryViewController()
-    private var selectedCategory: String?
     
+    private var selectedCategory: String?
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
     
@@ -31,6 +34,24 @@ final class IrregularEventViewController: UIViewController {
         "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
     ]
     
+    private var isNameEntered: Bool {
+        return !(addEventName.text?.isEmpty ?? true)
+    }
+    
+    private var isCategorySelected: Bool {
+        //TODO: add the logic to check if a category is selected
+        return selectedCategory != nil
+    }
+    
+    
+    private var isEmojiSelected: Bool {
+        return selectedEmoji != nil
+    }
+    
+    private var isColorSelected: Bool {
+        return selectedColor != nil
+    }
+    
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -47,7 +68,7 @@ final class IrregularEventViewController: UIViewController {
         return header
     }()
     
-    private let addEventName: UITextField = {
+    private lazy var addEventName: UITextField = {
         let addTrackerName = UITextField()
         addTrackerName.translatesAutoresizingMaskIntoConstraints = false
         addTrackerName.placeholder = "Введите название трекера"
@@ -135,6 +156,8 @@ final class IrregularEventViewController: UIViewController {
         
         addEventName.delegate = self
         
+        updateCreateButtonState()
+        
         setupIrregularEventTableView()
         setupEmojiCollectionView()
         setupColorCollectionView()
@@ -196,6 +219,16 @@ final class IrregularEventViewController: UIViewController {
         ])
     }
     
+    private func updateCreateButtonState() {
+        createButton.isEnabled = isNameEntered && isCategorySelected  && isEmojiSelected && isColorSelected
+        
+        if createButton.isEnabled {
+            createButton.backgroundColor = .ypBlackDay
+        } else {
+            createButton.backgroundColor = .ypGray
+        }
+    }
+    
     private func setupIrregularEventTableView() {
         irregularEventTableView.delegate = self
         irregularEventTableView.dataSource = self
@@ -218,6 +251,8 @@ final class IrregularEventViewController: UIViewController {
     
     @objc private func clearTextField() {
         addEventName.text = ""
+        clearButton.isHidden = true
+        updateCreateButtonState()
     }
     
     @objc private func cancelButtonTapped() {
@@ -225,18 +260,34 @@ final class IrregularEventViewController: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        guard let text = addEventName.text, !text.isEmpty,
-              let color = selectedColor,
-              let emoji = selectedEmoji else {
+        guard isNameEntered, isEmojiSelected, isColorSelected else {
+            //TODO: Show an alert or handle the case where not all conditions are met
             return
         }
-        let newEvent = Tracker(id: UUID(), name: text, color: color, emoji: emoji, schedule: TrackerSchedule.DaysOfTheWeek.allCases)
+        
+        let newEvent = Tracker(id: UUID(), name: addEventName.text!, color: selectedColor!, emoji: selectedEmoji!, schedule: TrackerSchedule.DaysOfTheWeek.allCases)
         trackersViewController?.appendTracker(tracker: newEvent, category: selectedCategory)
         addCategoryViewController.viewModel.addTrackerToCategory(to: self.selectedCategory, tracker: newEvent)
         trackersViewController?.reload()
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 }
+
+extension IrregularEventViewController {
+    func save(category: String?, emoji: String?, color: UIColor?) {
+        self.selectedCategory = category
+        self.selectedEmoji = emoji
+        self.selectedColor = color
+        
+        self.irregularEventTableView.reloadData()
+        
+        backingIsEmojiSelected = selectedEmoji != nil
+        backingIsColorSelected = selectedColor != nil
+        
+        updateCreateButtonState()
+    }
+}
+
 
 // MARK: - UITableViewDelegate
 extension IrregularEventViewController: UITableViewDelegate {
@@ -245,7 +296,13 @@ extension IrregularEventViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let addCategoryViewController = CategoryViewController()
+        addCategoryViewController.viewModel.$selectedCategory.bind { [weak self] categoryName in
+            self?.selectedCategory = categoryName?.title
+            self?.irregularEventTableView.reloadData()
+        }
         irregularEventTableView.deselectRow(at: indexPath, animated: true)
+        present(addCategoryViewController, animated: true, completion: nil)
     }
 }
 
@@ -270,14 +327,7 @@ extension IrregularEventViewController: UITableViewDataSource {
 // MARK: - UITextFieldDelegate
 extension IrregularEventViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        clearButton.isHidden = textField.text?.isEmpty ?? true
-        if textField.text?.isEmpty ?? false {
-            createButton.isEnabled = false
-            createButton.backgroundColor = .ypGray
-        } else {
-            createButton.isEnabled = true
-            createButton.backgroundColor = .ypBlackDay
-        }
+        updateCreateButtonState()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -380,6 +430,7 @@ extension IrregularEventViewController: UICollectionViewDelegate {
             cell?.layer.borderColor = cell?.colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
             
             selectedColor = cell?.colorView.backgroundColor
+            updateCreateButtonState()
         }
     }
     
@@ -390,7 +441,12 @@ extension IrregularEventViewController: UICollectionViewDelegate {
         } else if collectionView == colorCollectionView {
             let cell = collectionView.cellForItem(at: indexPath) as? EventColorCell
             cell?.layer.borderWidth = 0
+            
+            // Deselecting a color, set selectedColor to nil
+            selectedColor = nil
+            
+            // Update the selection state
+            updateCreateButtonState()
         }
     }
 }
-
