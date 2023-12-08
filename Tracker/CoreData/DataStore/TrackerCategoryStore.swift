@@ -58,29 +58,26 @@ final class TrackerCategoryStore: NSObject {
         trackerCategoryCoreData.title = category.title
         trackerCategoryCoreData.trackers = category.trackers.map {
             $0.id
-        } as NSObject
+        }
         try context.save()
     }
     
-    func addTrackerToCategory(to header: String?, tracker: Tracker) throws {
-        guard let header = header, var fromDB = try self.fetchTrackerCategory(with: header) else {
-            throw TrackerError.invalidHeader
+    func addTrackerToCategory(to title: String?, tracker: Tracker) throws {
+        guard let fromDb = try self.fetchTrackerCategory(with: title) else {
+            assertionFailure("Failed to fetch the tracker category with title: \(title ?? "")")
+            return
         }
-        if fromDB.trackers == nil {
-            fromDB.trackers = NSMutableArray()
-            
-        }
-        if let mutableTrackers = fromDB.trackers as? NSMutableArray {
-            mutableTrackers.add(tracker.id)
-            try context.save()
-        } else {
-            assertionFailure()
-        }
+        fromDb.trackers = trackerCategories.first {
+            $0.title == title
+        }?.trackers.map { $0.id }
+        print(type(of: fromDb.trackers))
+        fromDb.trackers?.append(tracker.id)
+        try context.save()
     }
     
     func trackerCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
-        guard let header = trackerCategoryCoreData.title,
-              let rawTrackers = trackerCategoryCoreData.trackers as? [Any]
+        guard let title = trackerCategoryCoreData.title,
+              let rawTrackers = trackerCategoryCoreData.trackers
         else {
             throw TrackerError.invalidTrackersType
         }
@@ -95,22 +92,22 @@ final class TrackerCategoryStore: NSObject {
             })
         }
         
-        return TrackerCategory(title: header, trackers: filteredTrackers)
+        return TrackerCategory(title: title, trackers: filteredTrackers)
     }
     
-    func fetchTrackerCategory(with header: String?) throws -> TrackerCategoryCoreData? {
-        guard let header = header else {
-            throw TrackerError.invalidHeader
+    func fetchTrackerCategory(with title: String?) throws -> TrackerCategoryCoreData? {
+        guard let title = title else {
+            throw TrackerError.invalidTitle
         }
         let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "header == %@", header as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "title == %@", title as CVarArg)
         let result = try context.fetch(fetchRequest)
         return result.first
     }
     
     enum TrackerError: Error {
         case invalidTrackersType
-        case invalidHeader
+        case invalidTitle
     }
 }
 

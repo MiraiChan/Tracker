@@ -16,6 +16,7 @@ final class TrackerStore: NSObject {
     enum TrackerError: Error {
         case invalidTrackerCoreData
         case invalidScheduleValue(Int)
+        case fetchError(Error)
     }
     
     private var context: NSManagedObjectContext

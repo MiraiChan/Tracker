@@ -284,9 +284,14 @@ final class NewHabitViewController: UIViewController {
         }
         
         let newTracker = Tracker(id: UUID(), name: addTrackerName.text!, color: selectedColor!, emoji: selectedEmoji!, schedule: self.selectedDays)
+        // Ensure there's a valid selected category before proceeding
+        guard let selectedCategory = self.selectedCategory else {
+            //TODO: Handle the case where there's no selected category (display an alert)
+            return
+        }
         
         trackersViewController?.appendTracker(tracker: newTracker, category: self.selectedCategory)
-        addCategoryViewController.viewModel.addTrackerToCategory(to: self.selectedCategory, tracker: newTracker)
+        addCategoryViewController.viewModel.addTrackerToCategory(to: selectedCategory, tracker: newTracker)
         trackersViewController?.reload()
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
