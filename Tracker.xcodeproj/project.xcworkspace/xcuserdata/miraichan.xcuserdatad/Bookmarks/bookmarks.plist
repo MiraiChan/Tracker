@@ -3,51 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>top-level-items</key>
-	<array>
-		<dict>
-			<key>destination</key>
-			<dict>
-				<key>location-parameters</key>
-				<dict>
-					<key>EndingColumnNumber</key>
-					<string>34</string>
-					<key>EndingLineNumber</key>
-					<string>283</string>
-					<key>StartingColumnNumber</key>
-					<string>28</string>
-					<key>StartingLineNumber</key>
-					<string>283</string>
-					<key>Timestamp</key>
-					<string>723764640.368228</string>
-				</dict>
-				<key>rebasable-url</key>
-				<dict>
-					<key>base</key>
-					<string>workspace</string>
-					<key>payload</key>
-					<dict>
-						<key>relative-path</key>
-						<string>Tracker/TrackersViewController/TrackersViewController.swift</string>
-					</dict>
-				</dict>
-			</dict>
-			<key>text-context</key>
-			<dict>
-				<key>focused</key>
-				<string>append</string>
-				<key>leading</key>
-				<string>            }
-        } else {
-            self.categories.</string>
-				<key>trailing</key>
-				<string>(TrackerCategory(title: category, trackers: [tracker]))
-        }
-        reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
-</string>
-			</dict>
-			<key>type</key>
-			<string>bookmark</string>
-		</dict>
-	</array>
+	<array/>
 </dict>
 </plist>

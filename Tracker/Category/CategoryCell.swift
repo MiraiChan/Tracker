@@ -14,15 +14,10 @@ final class CategoryCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let doneImage: UIImageView = {
-        let doneImage = UIImageView()
-        doneImage.translatesAutoresizingMaskIntoConstraints = false
-        return doneImage
-    }()
+    private let doneImage = UIImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -38,16 +33,14 @@ final class CategoryCell: UITableViewCell {
     private func setupUI() {
         backgroundColor = .ypBackgroundDay
         clipsToBounds = true
-        setupSubviews()
         setupConstraints()
     }
     
-    private func setupSubviews() {
-        addSubview(titleLabel)
-        addSubview(doneImage)
-    }
-    
     private func setupConstraints() {
+        [titleLabel, doneImage].forEach {
+        addSubview($0)
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),

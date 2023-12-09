@@ -267,25 +267,30 @@ extension TrackersViewController: TrackersActions {
     func appendTracker(tracker: Tracker, category: String?) {
         guard let category = category else { return }
         try? self.trackerStore.addNewTracker(tracker)
-        let foundCategory = self.categories.first { currentCategory in
-            currentCategory.title == category
-        }
-        if foundCategory != nil {
-            self.categories = self.categories.map { currentCategory in
-                if (currentCategory.title == category) {
-                    var updatedTrackers = currentCategory.trackers
-                    updatedTrackers.append(tracker)
-                    return TrackerCategory(title: currentCategory.title, trackers: updatedTrackers)
-                } else {
-                    return TrackerCategory(title: currentCategory.title, trackers: currentCategory.trackers)
-                }
-            }
+        
+        if let foundCategory = self.categories.first(where: { $0.title == category }) {
+            self.updateCategory(with: foundCategory, appending: tracker)
         } else {
-            self.categories.append(TrackerCategory(title: category, trackers: [tracker]))
+            self.addNewCategory(title: category, tracker: tracker)
         }
+        
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
-  
+    
+    private func updateCategory(with category: TrackerCategory, appending tracker: Tracker) {
+        let updatedTrackers = category.trackers + [tracker]
+        let updatedCategory = TrackerCategory(title: category.title, trackers: updatedTrackers)
+        
+        self.categories = self.categories.map {
+            $0.title == category.title ? updatedCategory : $0
+        }
+    }
+    
+    private func addNewCategory(title: String, tracker: Tracker) {
+        let newCategory = TrackerCategory(title: title, trackers: [tracker])
+        self.categories.append(newCategory)
+    }
+    
     func reload() {
         self.collectionView.reloadData()
     }

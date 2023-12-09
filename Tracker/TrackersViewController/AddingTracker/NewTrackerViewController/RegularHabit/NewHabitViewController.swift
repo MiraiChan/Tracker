@@ -254,13 +254,10 @@ final class NewHabitViewController: UIViewController {
     }
     
     private func updateCreateButtonState() {
-        createButton.isEnabled = isNameEntered && isScheduleSet && isEmojiSelected && isColorSelected
-        
-        if createButton.isEnabled {
-            createButton.backgroundColor = .ypBlackDay
-        } else {
-            createButton.backgroundColor = .ypGray
-        }
+        let isEnabledButton = isNameEntered && isCategorySelected  && isEmojiSelected && isColorSelected
+        createButton.isEnabled = isEnabledButton
+        let backgroundColor: UIColor = isEnabledButton ? .ypBlackDay : .ypGray
+        createButton.backgroundColor = backgroundColor
     }
     
     @objc private func clearTextField() {
