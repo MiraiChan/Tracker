@@ -51,6 +51,7 @@
 		01802C1A2B21305F0052867D /* CreateCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C192B21305F0052867D /* CreateCategoryViewController.swift */; };
 		01802C1C2B2130D30052867D /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C1B2B2130D30052867D /* CategoryCell.swift */; };
 		01802C1E2B2135310052867D /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C1D2B2135310052867D /* Observable.swift */; };
+		01802C242B24AB400052867D /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C232B24AB400052867D /* PageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +120,7 @@
 		01802C192B21305F0052867D /* CreateCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCategoryViewController.swift; sourceTree = "<group>"; };
 		01802C1B2B2130D30052867D /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		01802C1D2B2135310052867D /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		01802C232B24AB400052867D /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -344,6 +346,7 @@
 			isa = PBXGroup;
 			children = (
 				01802C142B1D2B4F0052867D /* OnboardingViewController.swift */,
+				01802C232B24AB400052867D /* PageViewController.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -521,6 +524,7 @@
 				012512512B0D56C6000C1703 /* HabitColorHeader.swift in Sources */,
 				012512472B08DDC2000C1703 /* ScheduleViewCell.swift in Sources */,
 				01802C1A2B21305F0052867D /* CreateCategoryViewController.swift in Sources */,
+				01802C242B24AB400052867D /* PageViewController.swift in Sources */,
 				0125124B2B0D38FD000C1703 /* HabitEmojiCell.swift in Sources */,
 				015B58282AF5A57700B9E485 /* TrackerSchedule.swift in Sources */,
 				012512572B0F573E000C1703 /* EventEmojiCell.swift in Sources */,
