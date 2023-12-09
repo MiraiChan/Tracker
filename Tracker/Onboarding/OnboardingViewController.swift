@@ -3,12 +3,7 @@
 //  Tracker
 //
 //  Created by Almira Khafizova on 03.12.23.
-// Создан ViewController для отображения отдельно взятой страницы; создан UIViewController, который будет отображаться в UIPageViewController.
-//Давай добавим отдельный PageViewController для отображения отдельно взятой страницы, который при инициализации ты будешь настраивать, а OnboardingViewController разгрузим от лишней логики создаения ViewController (пункт 3)
-//разгрузить этот ViewController, следующим образом:
 
-//Создать отдельный PageViewController, в который при инициализации ты подставляла нужную картинку/текстовку/ другие настройки
-//Добавить 2 таких VC в данный OnboardingViewController
 import UIKit
 
 final class OnboardingViewController: UIPageViewController {

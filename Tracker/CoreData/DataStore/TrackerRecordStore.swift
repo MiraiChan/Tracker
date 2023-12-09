@@ -34,8 +34,17 @@ final class TrackerRecordStore: NSObject {
     }
     
     convenience override init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).context
-        try! self.init(context: context)
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.context {
+            do {
+                try self.init(context: context)
+            } catch {
+                assertionFailure("Failed to initialize TrackerRecordStore. Error: \(error)")
+                self.init()  //TODO: Call the designated initializer with default behavior or handle it
+            }
+        } else {
+            assertionFailure("Unable to obtain CoreData context.")
+            self.init()  //TODO: Call the designated initializer with default behavior or handle it 
+        }
     }
     
     init(context: NSManagedObjectContext) throws {
@@ -46,6 +55,7 @@ final class TrackerRecordStore: NSObject {
         fetch.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerRecordCoreData.trackerId, ascending: true)
         ]
+        
         let controller = NSFetchedResultsController(
             fetchRequest: fetch,
             managedObjectContext: context,
@@ -54,7 +64,12 @@ final class TrackerRecordStore: NSObject {
         )
         controller.delegate = self
         self.fetchedResultsController = controller
-        try controller.performFetch()
+        
+        do {
+            try controller.performFetch()
+        } catch {
+            throw TrackerErrors.fetchError(error)
+        }
     }
     
     func addNewTrackerRecord(_ trackerRecord: TrackerRecord) throws {

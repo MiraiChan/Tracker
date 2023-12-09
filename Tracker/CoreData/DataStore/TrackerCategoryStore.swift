@@ -13,6 +13,7 @@ protocol TrackerCategoryStoreDelegate: AnyObject {
 }
 
 final class TrackerCategoryStore: NSObject {
+    
     static let shared = TrackerCategoryStore()
     
     private var context: NSManagedObjectContext
@@ -30,8 +31,17 @@ final class TrackerCategoryStore: NSObject {
     }
     
     convenience override init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).context
-        try! self.init(context: context)
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.context {
+            do {
+                try self.init(context: context)
+            } catch {
+                assertionFailure("Failed to initialize TrackerRecordStore. Error: \(error)")
+                self.init()  //TODO: Call the designated initializer with default behavior or handle it
+            }
+        } else {
+            assertionFailure("Unable to obtain CoreData context.")
+            self.init()  //TODO: Call the designated initializer with default behavior or handle it
+        }
     }
     
     init(context: NSManagedObjectContext) throws {

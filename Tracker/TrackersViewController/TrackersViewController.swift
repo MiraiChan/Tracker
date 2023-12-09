@@ -266,7 +266,7 @@ extension TrackersViewController: UITextViewDelegate {
 extension TrackersViewController: TrackersActions {
     func appendTracker(tracker: Tracker, category: String?) {
         guard let category = category else { return }
-        try! self.trackerStore.addNewTracker(tracker)
+        try? self.trackerStore.addNewTracker(tracker)
         let foundCategory = self.categories.first { currentCategory in
             currentCategory.title == category
         }
@@ -398,7 +398,7 @@ extension TrackersViewController: TrackerCellDelegate {
         let calendar = Calendar.current
         if calendar.compare(selectedDate, to: currentDate, toGranularity: .day) != .orderedDescending {
             let trackerRecord = TrackerRecord(trackerId: id, date: selectedDate)
-            try! self.trackerRecordStore.addNewTrackerRecord(trackerRecord)
+            try? self.trackerRecordStore.addNewTrackerRecord(trackerRecord)
         } else {
             return
         }
@@ -408,7 +408,7 @@ extension TrackersViewController: TrackerCellDelegate {
             isSameTrackerRecord(trackerRecord: $0, id: id)
         }
         
-        try! self.trackerRecordStore.removeTrackerRecord(toRemove)
+        try? self.trackerRecordStore.removeTrackerRecord(toRemove)
     }
 }
 

@@ -9,7 +9,7 @@ import UIKit
 
 final class CategoryViewController: UIViewController {
     
-    let cellReuseIdentifier = "HabitCategoryViewController"
+    private let cellReuseIdentifier = "HabitCategoryViewController"
     private(set) var viewModel: CategoryViewModel = CategoryViewModel.shared
     
     private let categotyHeader: UILabel = {

@@ -313,14 +313,14 @@ extension IrregularEventViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: irregularEventCellReuseIdentifier, for: indexPath) as! IrregularEventCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: irregularEventCellReuseIdentifier, for: indexPath) as? IrregularEventCell
         
         var title = "Категория"
         if let selectedCategory = selectedCategory {
             title += "\n" + selectedCategory
         }
-        cell.update(with: title)
-        return cell
+        cell?.update(with: title)
+        return cell ?? IrregularEventCell()
     }
 }
 
