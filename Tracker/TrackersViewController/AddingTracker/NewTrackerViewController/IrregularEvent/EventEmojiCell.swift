@@ -19,9 +19,15 @@ final class EventEmojiCell: UICollectionViewCell {
         return label
     }()
     
+    override var isSelected: Bool {
+        didSet {
+            contentView.backgroundColor = isSelected ? .ypLightGray : .ypWhiteDay
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        
         contentView.addSubview(emojiLabel)
         
         NSLayoutConstraint.activate([
@@ -31,7 +37,12 @@ final class EventEmojiCell: UICollectionViewCell {
     }
     
     required init?(coder: NSCoder) {
-        assertionFailure("init(coder:) has not been implemented")
-        return nil
+        super.init(coder: coder)
+        contentView.addSubview(emojiLabel)
+        
+        NSLayoutConstraint.activate([
+            emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
     }
 }

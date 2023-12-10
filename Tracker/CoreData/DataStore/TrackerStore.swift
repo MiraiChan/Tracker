@@ -16,6 +16,7 @@ final class TrackerStore: NSObject {
     enum TrackerError: Error {
         case invalidTrackerCoreData
         case invalidScheduleValue(Int)
+        case fetchError(Error)
     }
     
     private var context: NSManagedObjectContext
@@ -36,38 +37,45 @@ final class TrackerStore: NSObject {
     }
     
     convenience override init() {
-        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.context else {
-            preconditionFailure("Failed to obtain the Core Data context.")
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.context {
+            do {
+                try self.init(context: context)
+            } catch {
+                assertionFailure("Failed to initialize TrackerRecordStore. Error: \(error)")
+                self.init() //TODO: Call the designated initializer with default behavior or handle it
+            }
+        } else {
+            assertionFailure("Unable to obtain CoreData context.")
+            self.init()  //TODO: Call the designated initializer with default behavior or handle it 
         }
-        try! self.init(context: context)
     }
     
     init(context: NSManagedObjectContext) throws {
         self.context = context
         super.init()
-        /* 2:   Cоздаём запрос NSFetchRequest<TrackerCoreData> —
-         он работает с объектами типа TrackerCoreData.*/
+        
         let fetch = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
-        /* 3:   Обязательно указываем минимум один параметр сортировки. */
         fetch.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
         ]
         
-        /* 4:   Для создания контроллера укажем два обязательных параметра:
-         - запрос NSFetchRequest — в нём содержится минимум один параметр сортировки;
-         - контекст NSManagedObjectContext — он нужен для выполнения запроса. */
         let controller = NSFetchedResultsController(
             fetchRequest: fetch,
             managedObjectContext: context,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
-        /* 5:   Назначаем контроллеру делегата, чтобы уведомлять об изменениях. */
+        
         controller.delegate = self
         self.fetchedResultsController = controller
-        /* 6:   Делаем выборку данных. */
-        try controller.performFetch()
+        
+        do {
+            try controller.performFetch()
+        } catch {
+            throw TrackerError.fetchError(error)
+        }
     }
+    
     
     func addNewTracker(_ tracker: Tracker) throws {
         let trackerCoreData = TrackerCoreData(context: context)
@@ -76,13 +84,9 @@ final class TrackerStore: NSObject {
         trackerCoreData.color = UIColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.emoji = tracker.emoji
         
-        // перед использованием map проверяем, что schedule не nil
-        if let schedule = tracker.schedule {
-            trackerCoreData.schedule = schedule.map { (item: TrackerSchedule.DaysOfTheWeek) -> Int in
-                return item.rawValue
-            } as NSObject
+        trackerCoreData.schedule = tracker.schedule?.map {
+            $0.rawValue
         }
-        
         try context.save()
     }
     
@@ -91,7 +95,7 @@ final class TrackerStore: NSObject {
               let emoji = trackerCoreData.emoji,
               let color = UIColorMarshalling.color(from: trackerCoreData.color ?? ""),
               let name = trackerCoreData.name,
-              let scheduleArray = trackerCoreData.schedule as? [Int]
+              let scheduleArray = trackerCoreData.schedule
         else {
             throw TrackerError.invalidTrackerCoreData
         }

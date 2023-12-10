@@ -11,6 +11,8 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private var trackerStore = TrackerStore()
     private var trackerRecordStore = TrackerRecordStore()
     
+    private(set) var categoryViewModel: CategoryViewModel = CategoryViewModel.shared
+    
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
     private var filteredCategories: [TrackerCategory] = []
@@ -126,11 +128,10 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         trackerRecordStore.delegate = self
         trackers = trackerStore.trackers
         completedTrackers = trackerRecordStore.trackerRecords
+        categories = categoryViewModel.categories
     }
     
     private func reloadData() {
-        let category = TrackerCategory(title: "Важное", trackers: trackers) //temporary hardcoded mock category
-        categories.append(category)
         showSecondPlaceholderScreen()
     }
     
@@ -142,7 +143,6 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private func setupNav() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: plusButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePickerButton)
-        
     }
     
     private func addElements() {
@@ -264,20 +264,32 @@ extension TrackersViewController: UITextViewDelegate {
 
 // MARK: - TrackersActions
 extension TrackersViewController: TrackersActions {
-    func appendTracker(tracker: Tracker) {
-        try! self.trackerStore.addNewTracker(tracker)
+    func appendTracker(tracker: Tracker, category: String?) {
+        guard let category = category else { return }
+        try? self.trackerStore.addNewTracker(tracker)
         
-        self.categories = self.categories.map { category in
-            if (category.title == "Важное") {
-                var updatedTrackers = category.trackers
-                updatedTrackers.append(tracker)
-                return TrackerCategory(title: category.title, trackers: updatedTrackers)
-            }
-            return category
+        if let foundCategory = self.categories.first(where: { $0.title == category }) {
+            self.updateCategory(with: foundCategory, appending: tracker)
+        } else {
+            self.addNewCategory(title: category, tracker: tracker)
         }
+        
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
     
+    private func updateCategory(with category: TrackerCategory, appending tracker: Tracker) {
+        let updatedTrackers = category.trackers + [tracker]
+        let updatedCategory = TrackerCategory(title: category.title, trackers: updatedTrackers)
+        
+        self.categories = self.categories.map {
+            $0.title == category.title ? updatedCategory : $0
+        }
+    }
+    
+    private func addNewCategory(title: String, tracker: Tracker) {
+        let newCategory = TrackerCategory(title: title, trackers: [tracker])
+        self.categories.append(newCategory)
+    }
     
     func reload() {
         self.collectionView.reloadData()
@@ -391,7 +403,7 @@ extension TrackersViewController: TrackerCellDelegate {
         let calendar = Calendar.current
         if calendar.compare(selectedDate, to: currentDate, toGranularity: .day) != .orderedDescending {
             let trackerRecord = TrackerRecord(trackerId: id, date: selectedDate)
-            try! self.trackerRecordStore.addNewTrackerRecord(trackerRecord)
+            try? self.trackerRecordStore.addNewTrackerRecord(trackerRecord)
         } else {
             return
         }
@@ -401,7 +413,7 @@ extension TrackersViewController: TrackerCellDelegate {
             isSameTrackerRecord(trackerRecord: $0, id: id)
         }
         
-        try! self.trackerRecordStore.removeTrackerRecord(toRemove)
+        try? self.trackerRecordStore.removeTrackerRecord(toRemove)
     }
 }
 
