@@ -103,8 +103,8 @@ final class TrackerCell: UICollectionViewCell {
         taskTitleLabel.text = tracker.name
         emojiLabel.text = tracker.emoji
         
-        let wordDay = pluralizeDays(completedDays)
-        daysLabel.text = "\(wordDay)"
+        //let wordDay = pluralizeDays(completedDays)
+        daysLabel.text = String.localizedStringWithFormat(NSLocalizedString("numberOfDays", comment: ""), completedDays)
         
         let image = isCompletedToday ?
         doneImage?.withTintColor(cardView.backgroundColor ?? .ypWhiteDay) :
@@ -196,21 +196,21 @@ final class TrackerCell: UICollectionViewCell {
         ])
     }
     
-    private func pluralizeDays(_ count: Int) -> String {
-        let remainder10 = count % 10
-        let remainder100 = count % 100
-        if remainder10 >= 1 && remainder100 <= 19 {
-            return "\(count) дней"
-        }
-        switch remainder10 {
-        case 1:
-            return "\(count) день"
-        case 2, 3, 4:
-            return "\(count) дня"
-        default:
-            return "\(count) дней"
-        }
-    }
+//    private func pluralizeDays(_ count: Int) -> String {
+//        let remainder10 = count % 10
+//        let remainder100 = count % 100
+//        if remainder10 >= 1 && remainder100 <= 19 {
+//            return "\(count) дней"
+//        }
+//        switch remainder10 {
+//        case 1:
+//            return "\(count) день"
+//        case 2, 3, 4:
+//            return "\(count) дня"
+//        default:
+//            return "\(count) дней"
+//        }
+//    }
     
     @objc private func didAddButtonTapped() {
         guard let trackerId = trackerId,
