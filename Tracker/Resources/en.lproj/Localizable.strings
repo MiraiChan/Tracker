@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Almira Khafizova on 12.12.23.
+  
+*/
+
+app.title = "Trackers";
+filter.title = "Filters";
+statistic.title = "Statistic";
