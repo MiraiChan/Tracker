@@ -34,8 +34,8 @@ private extension TabBarController {
     func setupTabBarViewController() {
         view.backgroundColor = .ypWhiteDay
         
-        setupTabBarItem(for: trackersViewController, title: "Трекеры", image: "Trackers")
-        setupTabBarItem(for: statisticsViewController, title: "Статистика", image: "Statistics")
+        setupTabBarItem(for: trackersViewController, titleKey: "app.title", image: "Trackers")
+        setupTabBarItem(for: statisticsViewController, titleKey: "statistic.title", image: "Statistics")
         
         let viewControllers = [trackersViewController, statisticsViewController]
         selectedIndex = 0
@@ -44,9 +44,9 @@ private extension TabBarController {
         }
     }
     
-    func setupTabBarItem(for viewController: UIViewController, title: String, image: String) {
+    func setupTabBarItem(for viewController: UIViewController, titleKey: String, image: String) {
         viewController.tabBarItem = UITabBarItem(
-            title: title,
+            title: NSLocalizedString(titleKey, comment: ""),
             image: UIImage(named: image),
             selectedImage: nil
         )

@@ -35,7 +35,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     
     private let titleHeader: UILabel = {
         let label = UILabel ()
-        label.text = "Трекеры"
+        label.text = NSLocalizedString("app.title", comment: "")
         label.textColor = .ypBlackDay
         label.font = .systemFont(ofSize: 34, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -114,6 +114,17 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         return addTrackerButton
     }()
     
+    private lazy var filtersButton: UIButton = {
+        let filtersButton = UIButton()
+        filtersButton.layer.cornerRadius = 16
+        filtersButton.backgroundColor = .ypBlue
+        filtersButton.setTitle(NSLocalizedString("filter.title", comment: ""), for: .normal)
+        filtersButton.translatesAutoresizingMaskIntoConstraints = false
+        filtersButton.addTarget(self, action: #selector(filtersButtonTapped), for: .touchUpInside)
+        return filtersButton
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -156,6 +167,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(trackersNotFoundImage)
         view.addSubview(trackerNotFoundText)
         view.addSubview(collectionView)
+        view.addSubview(filtersButton)
     }
     
     private func configureCollectionView() {
@@ -200,7 +212,11 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
             collectionView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 24),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            filtersButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 130),
+            filtersButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -130),
+            filtersButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
+            filtersButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -217,6 +233,8 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
     
+    @objc private func filtersButtonTapped() { }
+
     private func reloadFilteredCategories(text: String?, date: Date) {
         let calendar = Calendar.current
         let filterWeekday = calendar.component(.weekday, from: date)
