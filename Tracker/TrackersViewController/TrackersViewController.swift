@@ -186,7 +186,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: TrackerTitleSectionView.id
         )
-        collectionView.backgroundColor = .clear
+        collectionView.backgroundColor = .ypWhiteDay
         searchTextField.delegate = self
     }
     
@@ -233,7 +233,8 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
     }
     
-    @objc private func filtersButtonTapped() { }
+    @objc private func filtersButtonTapped() {
+    }
 
     private func reloadFilteredCategories(text: String?, date: Date) {
         let calendar = Calendar.current
