@@ -19,6 +19,7 @@ extension UIColor {
     static var ypGray: UIColor { UIColor(named: "YP Gray") ?? UIColor.gray }
     static var ypLightGray: UIColor { UIColor(named: "YP Light Gray") ?? UIColor.lightGray }
     static var ypDatePickerBackground: UIColor { UIColor(named: "YP DatePicker Background") ?? UIColor.lightGray }
+    static var ypEmojiBackground: UIColor { UIColor(named: "YP Emoji Background") ?? UIColor.white }
     static var ypBackground: UIColor { UIColor(named: "YP Background (Alpha 12)") ?? UIColor.lightGray }
     
     static var ypColorSelection1: UIColor { UIColor(named: "Color selection 1") ?? UIColor.red }

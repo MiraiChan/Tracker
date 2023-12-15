@@ -12,6 +12,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private var trackerRecordStore = TrackerRecordStore()
     
     private(set) var categoryViewModel: CategoryViewModel = CategoryViewModel.shared
+    private let analytics = AnalyticsService.shared
     
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
@@ -56,9 +57,10 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private lazy var datePickerButton: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.addTarget(self, action: #selector(didChangeDate), for: .valueChanged)
-        datePicker.backgroundColor = .white
-        datePicker.tintColor = .ypBlue
+        datePicker.backgroundColor = .ypDatePickerBackground
         datePicker.datePickerMode = .date
+        datePicker.tintColor = .blue
+
         datePicker.preferredDatePickerStyle = .compact
         datePicker.locale = Locale(identifier: "ru_RU")
         datePicker.calendar.firstWeekday = 2
@@ -142,6 +144,16 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         categories = categoryViewModel.categories
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analytics.report("open", params: ["screen": "Main"])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analytics.report("close", params: ["screen": "Main"])
+    }
+    
     private func reloadData() {
         showSecondPlaceholderScreen()
     }
@@ -221,6 +233,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func didAddTrackerButtonTapped() {
+        analytics.report("click", params: ["screen": "Main", "item": "add_track"])
         let createNewTrackerVC = NewTrackerViewController()
         createNewTrackerVC.trackersViewController = self
         present(createNewTrackerVC, animated: true, completion: nil)
@@ -234,6 +247,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func filtersButtonTapped() {
+        analytics.report("click", params: ["screen": "Main", "item": "filter"])
     }
 
     private func reloadFilteredCategories(text: String?, date: Date) {
