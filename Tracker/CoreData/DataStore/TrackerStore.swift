@@ -46,7 +46,7 @@ final class TrackerStore: NSObject {
             }
         } else {
             assertionFailure("Unable to obtain CoreData context.")
-            self.init()  //TODO: Call the designated initializer with default behavior or handle it 
+            self.init()  //TODO: Call the designated initializer with default behavior or handle it
         }
     }
     
@@ -90,6 +90,19 @@ final class TrackerStore: NSObject {
         try context.save()
     }
     
+    func updateTracker(_ tracker: Tracker, oldTracker: Tracker?) throws {
+        let updated = try fetchTracker(with: oldTracker)
+        guard let updated = updated else { return }
+        updated.name = tracker.name
+        updated.colorIndex = Int16(tracker.colorIndex)
+        updated.color = UIColorMarshalling.hexString(from: tracker.color)
+        updated.emoji = tracker.emoji
+        updated.schedule = tracker.schedule?.map {
+            $0.rawValue
+        }
+        try context.save()
+    }
+    
     func tracker(from trackerCoreData: TrackerCoreData) throws -> Tracker {
         guard let id = trackerCoreData.id,
               let emoji = trackerCoreData.emoji,
@@ -107,7 +120,37 @@ final class TrackerStore: NSObject {
             return day
         }
         
-        return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule)
+        return Tracker(
+            id: id,
+            name: name,
+            color: color,
+            emoji: emoji,
+            schedule: schedule,
+            pinned: trackerCoreData.pinned,
+            colorIndex: Int(trackerCoreData.colorIndex)
+        )
+    }
+    
+    func deleteTracker(_ tracker: Tracker?) throws {
+        let toDelete = try fetchTracker(with: tracker)
+        guard let toDelete = toDelete else { return }
+        context.delete(toDelete)
+        try context.save()
+    }
+    
+    func pinTracker(_ tracker: Tracker?, value: Bool) throws {
+        let toPin = try fetchTracker(with: tracker)
+        guard let toPin = toPin else { return }
+        toPin.pinned = value
+        try context.save()
+    }
+    
+    func fetchTracker(with tracker: Tracker?) throws -> TrackerCoreData? {
+        guard let tracker = tracker else { fatalError() }
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+        let result = try context.fetch(fetchRequest)
+        return result.first
     }
 }
 //Делегат передает данные об изменениях.
