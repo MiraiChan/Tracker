@@ -7,5 +7,15 @@
 */
 
 app.title = "Trackers";
+
+
 filter.title = "Filters";
+
+"allTrackers" = "All trackers";
+"todayTrackers" = "Trackers for today";
+"completedTrackers" = "Completed";
+"unCompletedTrackers" = "Not completed";
+"trackersCompleted" = "Trackers completed";
+
+
 statistic.title = "Statistic";

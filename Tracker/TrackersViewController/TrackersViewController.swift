@@ -22,6 +22,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     
     private var selectedDate: Int?
     private var filterText: String?
+    private var currentFilter: Filters? = .allTrackers
     
     private let collectionView = UICollectionView(
         frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()
@@ -131,6 +132,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         reloadData()
+        reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
         configureView()
         setupNav()
         addElements()
@@ -251,6 +253,11 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     
     @objc private func filtersButtonTapped() {
         analytics.report("click", params: ["screen": "Main", "item": "filter"])
+        
+        let filtersViewController = FiltersViewController()
+        filtersViewController.delegate = self//TODO: Add missing conformance to 'FiltersViewControllerDelegate' to class 'TrackersViewController'
+        filtersViewController.selectedFilters = currentFilter
+        present(filtersViewController, animated: true)
     }
     
     private func reloadFilteredCategories(text: String?, date: Date) {

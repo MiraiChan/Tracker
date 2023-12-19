@@ -7,5 +7,15 @@
 */
 
 app.title = "Трекеры";
+
+
 filter.title = "Фильтры";
+
+"allTrackers" = "Все трекеры";
+"todayTrackers" = "Трекеры на сегодня";
+"completedTrackers" = "Завершенные";
+"unCompletedTrackers" = "Не завершенны";
+"trackersCompleted" = "Трекеров завершено";
+
+
 statistic.title = "Статистика";
