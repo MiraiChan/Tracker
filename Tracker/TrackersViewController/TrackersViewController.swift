@@ -52,7 +52,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         searchField.font = .systemFont(ofSize: 17, weight: .medium)
         searchField.translatesAutoresizingMaskIntoConstraints = false
         searchField.layer.cornerRadius = 10
-        searchField.placeholder = "Поиск"
+        searchField.placeholder = NSLocalizedString("search", comment: "Search")
         return searchField
     }()
     
@@ -86,7 +86,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Что будем отслеживать?"
+        label.text = NSLocalizedString("whatWillWeTrack", comment: "What will we track?")
         label.textAlignment = .center
         label.textColor = .ypBlackDay
         return label
@@ -102,7 +102,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private let trackerNotFoundText: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Ничего не найдено"
+        label.text = NSLocalizedString("nothingFound", comment: "No results found")
         label.textColor = .ypBlackDay
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
@@ -244,9 +244,11 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func didChangeDate() {
-        //        let dateFormatter = DateFormatter()
-        //        dateFormatter.dateFormat = "dd.MM.yy"
-        //        let formattedDate = dateFormatter.string(from: datePickerButton.date)
+        if currentFilter == .todayTrackers,
+           !Calendar.current.isDate(datePickerButton.date, inSameDayAs: Date()) {
+            currentFilter = .allTrackers
+            filtersButton.setTitleColor(.white, for: .normal)
+        }
         reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
         showSecondPlaceholderScreen()
     }
@@ -258,6 +260,18 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         filtersViewController.delegate = self//TODO: Add missing conformance to 'FiltersViewControllerDelegate' to class 'TrackersViewController'
         filtersViewController.selectedFilters = currentFilter
         present(filtersViewController, animated: true)
+    }
+    
+    private func applyFilter(_ filter: Filters) {
+        currentFilter = filter
+        
+        switch filter {
+        case .todayTrackers:
+            datePickerButton.date = Date()
+        default:
+            break
+        }
+        didChangeDate()
     }
     
     private func reloadFilteredCategories(text: String?, date: Date) {
@@ -619,6 +633,12 @@ extension TrackersViewController: UICollectionViewDelegate {
         }
         
         return configuration
+    }
+}
+
+extension TrackersViewController: FiltersViewControllerDelegate {
+    func filtersViewController(_ controller: FiltersViewController, didSelectFilter filter: Filters) {
+        applyFilter(filter)
     }
 }
 

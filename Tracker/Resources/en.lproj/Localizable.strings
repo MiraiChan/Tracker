@@ -8,6 +8,8 @@
 
 app.title = "Trackers";
 
+"search" = "Search";
+"whatWillWeTrack" = "What will we track?";
 
 filter.title = "Filters";
 
@@ -16,6 +18,7 @@ filter.title = "Filters";
 "completedTrackers" = "Completed";
 "unCompletedTrackers" = "Not completed";
 "trackersCompleted" = "Trackers completed";
+"nothingFound" = "No results found";
 
 
 statistic.title = "Statistic";

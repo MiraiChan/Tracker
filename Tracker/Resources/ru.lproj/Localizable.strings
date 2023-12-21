@@ -8,6 +8,9 @@
 
 app.title = "Трекеры";
 
+"search" = "Поиск";
+"whatWillWeTrack" = "Что будем отслеживать?";
+
 
 filter.title = "Фильтры";
 
@@ -16,6 +19,7 @@ filter.title = "Фильтры";
 "completedTrackers" = "Завершенные";
 "unCompletedTrackers" = "Не завершенны";
 "trackersCompleted" = "Трекеров завершено";
+"nothingFound" = "Ничего не найдено";
 
 
 statistic.title = "Статистика";
