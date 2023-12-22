@@ -27,7 +27,7 @@ final class TrackerCell: UICollectionViewCell {
         label.backgroundColor = .ypEmojiBackground
         label.clipsToBounds = true
         label.layer.cornerRadius = 24 / 2
-        label.font = .systemFont(ofSize: 16, weight: .medium)//?14
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -110,6 +110,9 @@ final class TrackerCell: UICollectionViewCell {
         doneImage?.withTintColor(cardView.backgroundColor ?? .ypWhiteDay) :
         plusImage.withTintColor(cardView.backgroundColor ?? .ypWhiteDay)
         addButton.setImage(image, for: UIControl.State.normal)
+        
+        self.pinnedTracker.isHidden = tracker.pinned ? false : true
+        
         if isCompletedToday {
             addButton.alpha = 0.4
         } else {
@@ -128,9 +131,17 @@ final class TrackerCell: UICollectionViewCell {
     
     private lazy var doneImage = UIImage(named: "Done")?.withRenderingMode(.alwaysTemplate)
     
+    private lazy var pinnedTracker: UIImageView = {
+           let pinnedTracker = UIImageView()
+           pinnedTracker.image = UIImage(named: "Pin")
+           pinnedTracker.translatesAutoresizingMaskIntoConstraints = false
+           return pinnedTracker
+       }()
+    
     private func addElements() {
         contentView.addSubview(cardView)
         contentView.addSubview(stackView)
+        contentView.addSubview(pinnedTracker)
         
         contentView.addSubview(emojiLabel)
         contentView.addSubview(taskTitleLabel)
@@ -192,7 +203,9 @@ final class TrackerCell: UICollectionViewCell {
             stackView.trailingAnchor.constraint(
                 equalTo: contentView.trailingAnchor,
                 constant: -12
-            )
+            ),
+            pinnedTracker.centerYAnchor.constraint(equalTo: emojiLabel.centerYAnchor),
+            pinnedTracker.trailingAnchor.constraint(equalTo: emojiLabel.trailingAnchor, constant: -12)
         ])
     }
 
@@ -210,4 +223,8 @@ final class TrackerCell: UICollectionViewCell {
             delegate?.completeTracker(id: trackerId, at: indexPath)
         }
     }
+    
+    func update(with pinned: UIImage) {
+           pinnedTracker.image = pinned
+       }
 }

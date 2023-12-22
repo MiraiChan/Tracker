@@ -257,7 +257,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         analytics.report("click", params: ["screen": "Main", "item": "filter"])
         
         let filtersViewController = FiltersViewController()
-        filtersViewController.delegate = self//TODO: Add missing conformance to 'FiltersViewControllerDelegate' to class 'TrackersViewController'
+        filtersViewController.delegate = self
         filtersViewController.selectedFilters = currentFilter
         present(filtersViewController, animated: true)
     }
