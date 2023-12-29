@@ -121,7 +121,7 @@ final class TrackerStore: NSObject {
             emoji: emoji,
             schedule: scheduleArray.map({ TrackerSchedule.DaysOfTheWeek(rawValue: $0)!}),
             pinned: trackerCoreData.pinned,
-            colorIndex: Int(trackerCoreData.colorIndex)
+            colorIndex: Int(trackerCoreData.colorIndex), isCompleted: false
         )
     }
     

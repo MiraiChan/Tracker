@@ -318,7 +318,7 @@ final class NewHabitViewController: UIViewController {
             return
         }
         
-        let newTracker = Tracker(id: UUID(), name: text, color: color, emoji: emoji, schedule: self.selectedDays, pinned: false, colorIndex: colorIndex )
+        let newTracker = Tracker(id: UUID(), name: text, color: color, emoji: emoji, schedule: self.selectedDays, pinned: false, colorIndex: colorIndex, isCompleted: false )
         if habitPageHeader.text == "Редактирование привычки" {
             trackersViewController?.updateTracker(tracker: newTracker, oldTracker: updatedTracker, category: self.selectedCategory?.title)
         } else {

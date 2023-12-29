@@ -15,6 +15,7 @@ struct Tracker {
     let schedule: [TrackerSchedule.DaysOfTheWeek]?
     let pinned: Bool
     let colorIndex: Int
+    var isCompleted: Bool
     
     init(
         id: UUID,
@@ -23,7 +24,8 @@ struct Tracker {
         emoji: String,
         schedule: [TrackerSchedule.DaysOfTheWeek]? = nil,
         pinned: Bool,
-        colorIndex: Int
+        colorIndex: Int,
+        isCompleted: Bool
         
     ) {
         self.id = id
@@ -33,5 +35,6 @@ struct Tracker {
         self.schedule = schedule
         self.pinned = pinned
         self.colorIndex = colorIndex
+        self.isCompleted = isCompleted
     }
 }

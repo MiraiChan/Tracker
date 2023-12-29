@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 
 final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private var trackerStore = TrackerStore()
@@ -264,12 +265,54 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         currentFilter = filter
         
         switch filter {
+        case .completedTrackers:
+            filteredCategories = filterCategoriesByCompletionStatus(completed: true)
+        case .unCompletedTrackers:
+            filteredCategories = filterCategoriesByCompletionStatus(completed: false)
         case .todayTrackers:
-            datePickerButton.date = Date()
-        default:
-            break
+            filterCategoriesForToday()
+        case .allTrackers:
+            reloadFilteredCategories(text: searchTextField.text, date: datePickerButton.date)
         }
-        didChangeDate()
+        
+        collectionView.reloadData()
+    }
+    
+    private func filterCategoriesByCompletionStatus(completed: Bool) -> [TrackerCategory] {
+        return categories.map { category in
+            TrackerCategory(
+                title: category.title,
+                trackers: category.trackers.filter { (tracker: Tracker) -> Bool in
+                    return tracker.isCompleted == completed
+                }
+            )
+        }
+        .filter { category in
+            !category.trackers.isEmpty
+        }
+    }
+    
+    private func filterCategoriesForToday() {
+        let todayCategories = categories.map { category in
+            TrackerCategory(
+                title: category.title,
+                trackers: category.trackers.filter { tracker in
+                    let dateCondition = tracker.schedule?.contains { day in
+                        guard let currentDay = self.selectedDate else {
+                            return true
+                        }
+                        return day.rawValue == currentDay
+                    } ?? false
+                    
+                    return dateCondition
+                }
+            )
+        }
+            .filter { category in
+                !category.trackers.isEmpty
+            }
+        
+        filteredCategories = todayCategories
     }
     
     private func reloadFilteredCategories(text: String?, date: Date) {

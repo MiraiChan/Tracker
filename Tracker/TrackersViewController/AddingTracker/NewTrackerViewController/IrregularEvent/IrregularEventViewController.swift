@@ -272,7 +272,7 @@ final class IrregularEventViewController: UIViewController {
         else {
             return
         }
-        let newEvent = Tracker(id: UUID(), name: text, color: color, emoji: emoji, schedule: TrackerSchedule.DaysOfTheWeek.allCases, pinned: false, colorIndex: colorIndex)
+        let newEvent = Tracker(id: UUID(), name: text, color: color, emoji: emoji, schedule: TrackerSchedule.DaysOfTheWeek.allCases, pinned: false, colorIndex: colorIndex, isCompleted: false)
         trackersViewController?.appendTracker(tracker: newEvent, category: self.selectedCategory?.title)
         addCategoryViewController.viewModel.addTrackerToCategory(to: self.selectedCategory, tracker: newEvent)
         trackersViewController?.reload()
