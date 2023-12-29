@@ -54,7 +54,7 @@ final class TrackerStore: NSObject {
         self.context = context
         super.init()
         
-        let fetch = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        let fetch = TrackerCoreData.fetchRequest()
         fetch.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
         ]
@@ -87,6 +87,7 @@ final class TrackerStore: NSObject {
         trackerCoreData.schedule = tracker.schedule?.map {
             $0.rawValue
         }
+        trackerCoreData.colorIndex = Int16(tracker.colorIndex)
         try context.save()
     }
     
@@ -113,19 +114,12 @@ final class TrackerStore: NSObject {
             throw TrackerError.invalidTrackerCoreData
         }
         
-        let schedule = try scheduleArray.map {
-            guard let day = TrackerSchedule.DaysOfTheWeek(rawValue: $0) else {
-                throw TrackerError.invalidScheduleValue($0)
-            }
-            return day
-        }
-        
         return Tracker(
             id: id,
             name: name,
             color: color,
             emoji: emoji,
-            schedule: schedule,
+            schedule: scheduleArray.map({ TrackerSchedule.DaysOfTheWeek(rawValue: $0)!}),
             pinned: trackerCoreData.pinned,
             colorIndex: Int(trackerCoreData.colorIndex)
         )

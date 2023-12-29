@@ -222,7 +222,6 @@ final class NewHabitViewController: UIViewController {
             habitPageHeader.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             habitPageHeader.heightAnchor.constraint(equalToConstant: 22),
             
-            //addTrackerName.topAnchor.constraint(equalTo: habitPageHeader.bottomAnchor, constant: 38),
             addTrackerName.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             addTrackerName.heightAnchor.constraint(equalToConstant: 75),
             addTrackerName.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
@@ -319,7 +318,7 @@ final class NewHabitViewController: UIViewController {
             return
         }
         
-        let newTracker = Tracker(id: UUID(), name: text, color: selectedColor!, emoji: selectedEmoji!, schedule: self.selectedDays, pinned: false, colorIndex: selectedColorIndex ?? 0)
+        let newTracker = Tracker(id: UUID(), name: text, color: color, emoji: emoji, schedule: self.selectedDays, pinned: false, colorIndex: colorIndex )
         if habitPageHeader.text == "Редактирование привычки" {
             trackersViewController?.updateTracker(tracker: newTracker, oldTracker: updatedTracker, category: self.selectedCategory?.title)
         } else {

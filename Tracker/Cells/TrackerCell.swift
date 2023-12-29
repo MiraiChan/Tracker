@@ -132,13 +132,14 @@ final class TrackerCell: UICollectionViewCell {
     private lazy var doneImage = UIImage(named: "Done")?.withRenderingMode(.alwaysTemplate)
     
     private lazy var pinnedTracker: UIImageView = {
-           let pinnedTracker = UIImageView()
-           pinnedTracker.image = UIImage(named: "Pin")
-           pinnedTracker.translatesAutoresizingMaskIntoConstraints = false
-           return pinnedTracker
-       }()
+        let pinnedTracker = UIImageView()
+        pinnedTracker.image = UIImage(named: "Pin")
+        pinnedTracker.translatesAutoresizingMaskIntoConstraints = false
+        return pinnedTracker
+    }()
     
     private func addElements() {
+        contentView.addSubview(daysLabel)
         contentView.addSubview(cardView)
         contentView.addSubview(stackView)
         contentView.addSubview(pinnedTracker)
@@ -205,10 +206,10 @@ final class TrackerCell: UICollectionViewCell {
                 constant: -12
             ),
             pinnedTracker.centerYAnchor.constraint(equalTo: emojiLabel.centerYAnchor),
-            pinnedTracker.trailingAnchor.constraint(equalTo: emojiLabel.trailingAnchor, constant: -12)
+            pinnedTracker.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12)
         ])
     }
-
+    
     @objc private func didAddButtonTapped() {
         analytics.report("click", params: ["screen": "Main", "item": "track"])
         guard let trackerId = trackerId,
@@ -225,6 +226,6 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     func update(with pinned: UIImage) {
-           pinnedTracker.image = pinned
-       }
+        pinnedTracker.image = pinned
+    }
 }

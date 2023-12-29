@@ -227,11 +227,6 @@ extension CategoryViewController: UITableViewDataSource {
         if indexPath.row < viewModel.categories.count {
             let category = viewModel.categories[indexPath.row]
             cell.update(with: category.title)
-            //            if let selected = viewModel.selectedCategory {
-            //                if selected.title == category.title {
-            //                    cell.done(with: UIImage(named: "Checkmark") ?? UIImage())
-            //                }
-            //            }
             
             let isLastCell = indexPath.row == viewModel.categories.count - 1
             if isLastCell {
