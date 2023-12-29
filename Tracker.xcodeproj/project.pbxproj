@@ -25,7 +25,6 @@
 		015B57E82AEB032900B9E485 /* Tracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 015B57E62AEB032900B9E485 /* Tracker.xcdatamodeld */; };
 		015B57EA2AEB032A00B9E485 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 015B57E92AEB032A00B9E485 /* Assets.xcassets */; };
 		015B57ED2AEB032A00B9E485 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 015B57EB2AEB032A00B9E485 /* LaunchScreen.storyboard */; };
-		015B57F82AEB032A00B9E485 /* TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B57F72AEB032A00B9E485 /* TrackerTests.swift */; };
 		015B58022AEB032A00B9E485 /* TrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58012AEB032A00B9E485 /* TrackerUITests.swift */; };
 		015B58042AEB032A00B9E485 /* TrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58032AEB032A00B9E485 /* TrackerUITestsLaunchTests.swift */; };
 		015B58132AEBE6F400B9E485 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B58122AEBE6F400B9E485 /* TabBarController.swift */; };
@@ -62,6 +61,7 @@
 		01802C5C2B32528E0052867D /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C5B2B32528E0052867D /* Filters.swift */; };
 		01802C5E2B3252E90052867D /* FiltersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C5D2B3252E90052867D /* FiltersCell.swift */; };
 		01802C602B35127E0052867D /* StatisticsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01802C5F2B35127E0052867D /* StatisticsCell.swift */; };
+		01802C622B3EDFB70052867D /* TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B57F72AEB032A00B9E485 /* TrackerTests.swift */; };
 		863116747A3DBE343E657CEB /* Pods_Tracker_TrackerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA1318139C4923AF76FC511 /* Pods_Tracker_TrackerUITests.framework */; };
 		C32D45E43A0793D94EC617A9 /* Pods_TrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA85669DD6F63B4D4DEE6CD4 /* Pods_TrackerTests.framework */; };
 		E6277AFBBAAD9EC453669D1C /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74539DED16BD3E5C9DC7CA02 /* Pods_Tracker.framework */; };
@@ -766,7 +766,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				015B57F82AEB032A00B9E485 /* TrackerTests.swift in Sources */,
+				01802C622B3EDFB70052867D /* TrackerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
