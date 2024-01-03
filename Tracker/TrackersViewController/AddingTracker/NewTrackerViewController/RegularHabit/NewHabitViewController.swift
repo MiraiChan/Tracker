@@ -29,7 +29,6 @@ final class NewHabitViewController: UIViewController {
     private var selectedEmoji: String?
     
     private var selectedDays: [TrackerSchedule.DaysOfTheWeek] = []
-    //private var category: String? = nil
     private(set) var viewModel: CategoryViewModel = CategoryViewModel.shared
     private var edit: Bool?
     

@@ -10,7 +10,9 @@ import UIKit
 final class TabBarController: UITabBarController {
     
     let trackersViewController = TrackersViewController()
-    let statisticsViewController = StatisticsViewController()
+    lazy var statisticsViewController: StatisticsViewController = {
+        return StatisticsViewController(trackersViewController: self.trackersViewController)
+    }()
     let separatorImage = UIImage()
     
     override func viewDidLoad() {

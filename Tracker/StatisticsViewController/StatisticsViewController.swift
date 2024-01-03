@@ -10,7 +10,17 @@ import UIKit
 final class StatisticsViewController: UIViewController {
     
     let cellReuseIdentifier = "StatisticViewController"
-    var trackersViewController: TrackersViewController?
+    let trackersViewController: TrackersViewController
+    
+    init(trackersViewController: TrackersViewController) {
+           self.trackersViewController = trackersViewController
+           super.init(nibName: nil, bundle: nil)
+       }
+    
+    required init?(coder: NSCoder) {
+        assertionFailure("init(coder:) has not been implemented")
+        return nil
+    }
     
     private let header: UILabel = {
         let header = UILabel()
@@ -24,7 +34,7 @@ final class StatisticsViewController: UIViewController {
     private let emptyStatistic: UIImageView = {
         let emptySearch = UIImageView()
         emptySearch.translatesAutoresizingMaskIntoConstraints = false
-        emptySearch.image = UIImage(named: "statistic_not_found")
+        emptySearch.image = UIImage(named: "Statistic_not_found")
         return emptySearch
     }()
     
@@ -75,6 +85,7 @@ final class StatisticsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         statisticTableView.reloadData()
+        showPlaceholder()
     }
     
     private func addSubviews() {
@@ -85,8 +96,6 @@ final class StatisticsViewController: UIViewController {
     }
     
     private func showPlaceholder() {
-        guard let trackersViewController = trackersViewController else { return }
-        
         if trackersViewController.completedTrackers.count > 0 {
             emptyStatistic.isHidden = true
             emptyStatisticText.isHidden = true
@@ -134,7 +143,6 @@ extension StatisticsViewController: UITableViewDataSource {
             break
         }
         
-        showPlaceholder()
         
         var count = ""
         
@@ -144,7 +152,7 @@ extension StatisticsViewController: UITableViewDataSource {
         case 1:
             count = "0"
         case 2:
-            count = "\(trackersViewController?.completedTrackers.count ?? 0)"
+            count = "\(trackersViewController.completedTrackers.count)"
         case 3:
             count = "0"
         default:

@@ -66,7 +66,6 @@ final class PreviewViewController: UIViewController {
         trackerDescription.text = tracker.name
         
         self.pinnedTracker.isHidden = tracker.pinned ? false : true
-        print("Preview", tracker.pinned)
     }
     
     private func setupConstraints() {
