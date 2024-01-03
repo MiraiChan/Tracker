@@ -15,7 +15,7 @@ final class StatisticsViewController: UIViewController {
     private let header: UILabel = {
         let header = UILabel()
         header.translatesAutoresizingMaskIntoConstraints = false
-        header.text = "Статистика"
+        header.text = NSLocalizedString("statistic.title", comment: "")
         header.textColor = .ypBlackDay
         header.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         return header
