@@ -8,10 +8,9 @@
 import UIKit
 
 extension UIColor {
-    static var ypBlackDay: UIColor { UIColor(named: "YP Black Day") ?? UIColor.black }
-    static var ypBlackNight: UIColor { UIColor(named: "YP Black Night") ?? UIColor.white }
+    static var ypBackgroundDay: UIColor { UIColor(named: "YP Background Day") ?? UIColor.lightGray }
     
-    static var ypWhiteNight: UIColor { UIColor(named: "YP White Night") ?? UIColor.black }
+    static var ypBlackDay: UIColor { UIColor(named: "YP Black Day") ?? UIColor.black }
     static var ypWhiteDay: UIColor { UIColor(named: "YP White Day") ?? UIColor.white }
     
     static var ypBlue: UIColor { UIColor(named: "YP Blue") ?? UIColor.blue }
@@ -20,10 +19,8 @@ extension UIColor {
     static var ypGray: UIColor { UIColor(named: "YP Gray") ?? UIColor.gray }
     static var ypLightGray: UIColor { UIColor(named: "YP Light Gray") ?? UIColor.lightGray }
     static var ypDatePickerBackground: UIColor { UIColor(named: "YP DatePicker Background") ?? UIColor.lightGray }
+    static var ypEmojiBackground: UIColor { UIColor(named: "YP Emoji Background") ?? UIColor.white }
     static var ypBackground: UIColor { UIColor(named: "YP Background (Alpha 12)") ?? UIColor.lightGray }
-    
-    static var ypBackgroundNight: UIColor { UIColor(named: "YP Background (Alpha 85)") ?? UIColor.darkGray }
-    static var ypBackgroundDay: UIColor { UIColor(named: "YP Background (Alpha 30)") ?? UIColor.lightGray }
     
     static var ypColorSelection1: UIColor { UIColor(named: "Color selection 1") ?? UIColor.red }
     static var ypColorSelection2: UIColor { UIColor(named: "Color selection 2") ?? UIColor.orange }

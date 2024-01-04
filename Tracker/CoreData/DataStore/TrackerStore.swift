@@ -46,7 +46,7 @@ final class TrackerStore: NSObject {
             }
         } else {
             assertionFailure("Unable to obtain CoreData context.")
-            self.init()  //TODO: Call the designated initializer with default behavior or handle it 
+            self.init()  //TODO: Call the designated initializer with default behavior or handle it
         }
     }
     
@@ -54,7 +54,7 @@ final class TrackerStore: NSObject {
         self.context = context
         super.init()
         
-        let fetch = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        let fetch = TrackerCoreData.fetchRequest()
         fetch.sortDescriptors = [
             NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
         ]
@@ -87,6 +87,20 @@ final class TrackerStore: NSObject {
         trackerCoreData.schedule = tracker.schedule?.map {
             $0.rawValue
         }
+        trackerCoreData.colorIndex = Int16(tracker.colorIndex)
+        try context.save()
+    }
+    
+    func updateTracker(_ tracker: Tracker, oldTracker: Tracker?) throws {
+        let updated = try fetchTracker(with: oldTracker)
+        guard let updated = updated else { return }
+        updated.name = tracker.name
+        updated.colorIndex = Int16(tracker.colorIndex)
+        updated.color = UIColorMarshalling.hexString(from: tracker.color)
+        updated.emoji = tracker.emoji
+        updated.schedule = tracker.schedule?.map {
+            $0.rawValue
+        }
         try context.save()
     }
     
@@ -100,14 +114,37 @@ final class TrackerStore: NSObject {
             throw TrackerError.invalidTrackerCoreData
         }
         
-        let schedule = try scheduleArray.map {
-            guard let day = TrackerSchedule.DaysOfTheWeek(rawValue: $0) else {
-                throw TrackerError.invalidScheduleValue($0)
-            }
-            return day
-        }
-        
-        return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule)
+        return Tracker(
+            id: id,
+            name: name,
+            color: color,
+            emoji: emoji,
+            schedule: scheduleArray.map({ TrackerSchedule.DaysOfTheWeek(rawValue: $0)!}),
+            pinned: trackerCoreData.pinned,
+            colorIndex: Int(trackerCoreData.colorIndex), isCompleted: false
+        )
+    }
+    
+    func deleteTracker(_ tracker: Tracker?) throws {
+        let toDelete = try fetchTracker(with: tracker)
+        guard let toDelete = toDelete else { return }
+        context.delete(toDelete)
+        try context.save()
+    }
+    
+    func pinTracker(_ tracker: Tracker?, value: Bool) throws {
+        let toPin = try fetchTracker(with: tracker)
+        guard let toPin = toPin else { return }
+        toPin.pinned = value
+        try context.save()
+    }
+    
+    func fetchTracker(with tracker: Tracker?) throws -> TrackerCoreData? {
+        guard let tracker = tracker else { fatalError() }
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+        let result = try context.fetch(fetchRequest)
+        return result.first
     }
 }
 //Делегат передает данные об изменениях.
