@@ -13,9 +13,9 @@ final class StatisticsViewController: UIViewController {
     let trackersViewController: TrackersViewController
     
     init(trackersViewController: TrackersViewController) {
-           self.trackersViewController = trackersViewController
-           super.init(nibName: nil, bundle: nil)
-       }
+        self.trackersViewController = trackersViewController
+        super.init(nibName: nil, bundle: nil)
+    }
     
     required init?(coder: NSCoder) {
         assertionFailure("init(coder:) has not been implemented")
@@ -65,7 +65,7 @@ final class StatisticsViewController: UIViewController {
         statisticTableView.dataSource = self
         statisticTableView.register(StatisticsCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         statisticTableView.reloadData()
-                
+        
         NSLayoutConstraint.activate([
             header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 44),
             header.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -96,15 +96,10 @@ final class StatisticsViewController: UIViewController {
     }
     
     private func showPlaceholder() {
-        if trackersViewController.completedTrackers.count > 0 {
-            emptyStatistic.isHidden = true
-            emptyStatisticText.isHidden = true
-            statisticTableView.isHidden = false
-        } else {
-            emptyStatistic.isHidden = false
-            emptyStatisticText.isHidden = false
-            statisticTableView.isHidden = true
-        }
+        let hasCompletedTrackers = trackersViewController.completedTrackers.count > 0
+        emptyStatistic.isHidden = hasCompletedTrackers
+        emptyStatisticText.isHidden = hasCompletedTrackers
+        statisticTableView.isHidden = !hasCompletedTrackers
     }
 }
 
@@ -142,7 +137,6 @@ extension StatisticsViewController: UITableViewDataSource {
         default:
             break
         }
-        
         
         var count = ""
         

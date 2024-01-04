@@ -24,7 +24,7 @@ final class CategoryViewModel {
     }
     
     func updateCategory(category: TrackerCategory?, header: String) {
-        try! self.categoryStore.updateCategory(category: category, header: header)
+        try? self.categoryStore.updateCategory(category: category, header: header)
     }
     
     func addTrackerToCategory(to category: TrackerCategory?, tracker: Tracker) {

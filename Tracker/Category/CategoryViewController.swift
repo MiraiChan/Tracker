@@ -72,15 +72,10 @@ final class CategoryViewController: UIViewController {
         checkEmptyCategoriesScreen()
     }
     private func checkEmptyCategoriesScreen() {
-        if !viewModel.categories.isEmpty {
-            categoriesTableView.isHidden = true
-            emptyCategoryPlaceholder.isHidden = false
-            emptyCategoryText.isHidden = false
-        } else {
-            categoriesTableView.isHidden = false
-            emptyCategoryPlaceholder.isHidden = true
-            emptyCategoryText.isHidden = true
-        }
+        let isEmptyCategories = viewModel.categories.isEmpty
+        categoriesTableView.isHidden = !isEmptyCategories
+        emptyCategoryPlaceholder.isHidden = isEmptyCategories
+        emptyCategoryText.isHidden = isEmptyCategories
     }
     
     private func setupConstraints() {
@@ -181,37 +176,48 @@ extension CategoryViewController: UITableViewDelegate {
         let category = self.viewModel.categories[indexPath.row]
         
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            let editAction = UIAction(title: "Редактировать") { [weak self] _ in
-                guard let self = self else { return }
-                
-                let createCategoryViewController = CreateCategoryViewController()
-                createCategoryViewController.categoryViewController = self
-                createCategoryViewController.editCategory(category, newHeader: "Редактирование категории")
-                self.present(createCategoryViewController, animated: true, completion: nil)
-            }
-            
-            let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
-                guard let self = self else { return }
-                
-                let alertController = UIAlertController(title: nil, message: "Эта категория точно не нужна?", preferredStyle: .actionSheet)
-                let deleteConfirmationAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
-                    try! self.trackerCategoryStore.deleteCategory(category)
-                    self.checkEmptyCategoriesScreen()
-                    self.categoriesTableView.reloadData()
-                }
-                alertController.addAction(deleteConfirmationAction)
-                
-                let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
-                alertController.addAction(cancelAction)
-                
-                self.present(alertController, animated: true, completion: nil)
-            }
+            let editAction = self.createEditAction(for: category)
+            let deleteAction = self.createDeleteAction(for: category)
             
             let actions = [editAction, deleteAction]
             return UIMenu(title: "", children: actions)
         }
         
         return configuration
+    }
+    
+    // Создание действия редактирования
+    private func createEditAction(for category: TrackerCategory) -> UIAction {
+        return UIAction(title: "Редактировать") { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.updateCategory(category: category, header: "Редактирование категории")
+        }
+    }
+    
+    // Создание действия удаления
+    private func createDeleteAction(for category: TrackerCategory) -> UIAction {
+        return UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.showDeleteCategoryAlert(category)
+        }
+    }
+    
+    // Отображение алерта удаления категории
+    private func showDeleteCategoryAlert(_ category: TrackerCategory) {
+        let alertController = UIAlertController(title: nil, message: "Эта категория точно не нужна?", preferredStyle: .actionSheet)
+        let deleteConfirmationAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
+            try? self.trackerCategoryStore.deleteCategory(category)
+            self.checkEmptyCategoriesScreen()
+            self.categoriesTableView.reloadData()
+        }
+        alertController.addAction(deleteConfirmationAction)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 

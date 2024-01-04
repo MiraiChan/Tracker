@@ -12,14 +12,12 @@ final class StatisticsCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let countLabel: UILabel = {
         let countLabel = UILabel()
         countLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-        countLabel.translatesAutoresizingMaskIntoConstraints = false
         return countLabel
     }()
     
@@ -27,7 +25,6 @@ final class StatisticsCell: UITableViewCell {
         let borderView = UIView()
         borderView.layer.cornerRadius = 16
         borderView.backgroundColor = .ypBlue
-        borderView.translatesAutoresizingMaskIntoConstraints = false
         return borderView
     }()
     
@@ -45,7 +42,6 @@ final class StatisticsCell: UITableViewCell {
         let insideView = UIView()
         insideView.layer.cornerRadius = 16
         insideView.backgroundColor = .ypWhiteDay
-        insideView.translatesAutoresizingMaskIntoConstraints = false
         return insideView
     }()
     
@@ -54,13 +50,34 @@ final class StatisticsCell: UITableViewCell {
         
         backgroundColor = .clear
         clipsToBounds = true
-        
-        addSubview(borderView)
-        addSubview(insideView)
-        addSubview(countLabel)
-        addSubview(titleLabel)
+        addSubViews()
+        applyConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        assertionFailure("init(coder:) has not been implemented")
+        return nil
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = borderView.bounds
+    }
+    
+    func update(with title: String, count: String) {
+        titleLabel.text = title
+        countLabel.text = count
+    }
+    
+    private func addSubViews() {
+        [borderView, insideView, countLabel, titleLabel].forEach {
+            addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         borderView.layer.addSublayer(gradientLayer)
-        
+    }
+    
+    private func applyConstraints() {
         NSLayoutConstraint.activate([
             borderView.centerYAnchor.constraint(equalTo: centerYAnchor),
             borderView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -77,19 +94,4 @@ final class StatisticsCell: UITableViewCell {
             titleLabel.topAnchor.constraint(equalTo: countLabel.bottomAnchor, constant: 7)
         ])
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-            super.layoutSubviews()
-            gradientLayer.frame = borderView.bounds
-        }
-    
-    func update(with title: String, count: String) {
-        titleLabel.text = title
-        countLabel.text = count
-    }
 }
-

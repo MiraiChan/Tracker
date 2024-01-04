@@ -377,7 +377,7 @@ extension TrackersViewController: TrackersActions {
     
     func updateTracker(tracker: Tracker, oldTracker: Tracker?, category: String?) {
         guard let category = category, let oldTracker = oldTracker else { return }
-        try! self.trackerStore.updateTracker(tracker, oldTracker: oldTracker)
+        try? self.trackerStore.updateTracker(tracker, oldTracker: oldTracker)
         let foundCategory = self.categories.first { ctgry in
             ctgry.title == category
         }
@@ -400,7 +400,7 @@ extension TrackersViewController: TrackersActions {
     }
     func appendTracker(tracker: Tracker, category: String?) {
         guard let category = category else { return }
-        try! self.trackerStore.addNewTracker(tracker)
+        try? self.trackerStore.addNewTracker(tracker)
         let foundCategory = self.categories.first { currentCategory in
             currentCategory.title == category
         }
@@ -452,7 +452,6 @@ extension TrackersViewController: TrackersActions {
         }
     }
 }
-
 
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -586,11 +585,11 @@ extension TrackersViewController: UICollectionViewDelegate {
             let pinAction: UIAction
             if tracker.pinned {
                 pinAction = UIAction(title: "Открепить", handler: { [weak self] _ in
-                    try! self?.trackerStore.pinTracker(tracker, value: false)
+                    try? self?.trackerStore.pinTracker(tracker, value: false)
                 })
             } else {
                 pinAction = UIAction(title: "Закрепить", handler: { [weak self] _ in
-                    try! self?.trackerStore.pinTracker(tracker, value: true)
+                    try? self?.trackerStore.pinTracker(tracker, value: true)
                 })
             }
             
@@ -621,7 +620,7 @@ extension TrackersViewController: UICollectionViewDelegate {
                 
                 let alertController = UIAlertController(title: nil, message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
                 let deleteConfirmationAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
-                    try! self?.trackerStore.deleteTracker(tracker)
+                    try? self?.trackerStore.deleteTracker(tracker)
                     self?.showFirstPlaceholderScreen()
                 }
                 alertController.addAction(deleteConfirmationAction)
