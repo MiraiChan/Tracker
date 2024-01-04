@@ -31,16 +31,17 @@ final class TrackerCategoryStore: NSObject {
     }
     
     convenience override init() {
-        if let context = (UIApplication.shared.delegate as? AppDelegate)?.context {
-            do {
-                try self.init(context: context)
-            } catch {
-                assertionFailure("Failed to initialize TrackerRecordStore. Error: \(error)")
-                self.init()  //TODO: Call the designated initializer with default behavior or handle it
-            }
-        } else {
+        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.context else {
             assertionFailure("Unable to obtain CoreData context.")
-            self.init()  //TODO: Call the designated initializer with default behavior or handle it
+            self.init()  // TODO: Call the designated initializer with default behavior or handle it
+            return
+        }
+
+        do {
+            try self.init(context: context)
+        } catch {
+            assertionFailure("Failed to initialize TrackerCategoryStore. Error: \(error)")
+            self.init()  // TODO: Call the designated initializer with default behavior or handle it
         }
     }
     
@@ -66,6 +67,7 @@ final class TrackerCategoryStore: NSObject {
     func addNewCategory(_ category: TrackerCategory) throws {
         let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
         trackerCategoryCoreData.title = category.title
+        
         trackerCategoryCoreData.trackers = category.trackers.map {
             $0.id
         }
