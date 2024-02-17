@@ -10,6 +10,7 @@ import UIKit
 final class CategoryViewController: UIViewController {
     
     private let cellReuseIdentifier = "HabitCategoryViewController"
+    private var trackerCategoryStore = TrackerCategoryStore()
     private(set) var viewModel: CategoryViewModel = CategoryViewModel.shared
     
     private let categotyHeader: UILabel = {
@@ -68,19 +69,21 @@ final class CategoryViewController: UIViewController {
         categoriesTableView.delegate = self
         categoriesTableView.dataSource = self
         categoriesTableView.register(CategoryCell.self, forCellReuseIdentifier: cellReuseIdentifier)
-        if !viewModel.categories.isEmpty {
-            categoriesTableView.isHidden = false
-            emptyCategoryPlaceholder.isHidden = true
-            emptyCategoryText.isHidden = true
-        }
+        checkEmptyCategoriesScreen()
+    }
+    private func checkEmptyCategoriesScreen() {
+        let isEmptyCategories = viewModel.categories.isEmpty
+        categoriesTableView.isHidden = !isEmptyCategories
+        emptyCategoryPlaceholder.isHidden = isEmptyCategories
+        emptyCategoryText.isHidden = isEmptyCategories
     }
     
     private func setupConstraints() {
         [categotyHeader, emptyCategoryPlaceholder,
          emptyCategoryText, addCategory, categoriesTableView].forEach {
-        view.addSubview($0)
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
+            view.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         NSLayoutConstraint.activate([
             view.topAnchor.constraint(equalTo: view.topAnchor),
@@ -120,6 +123,10 @@ extension CategoryViewController: CategoryActions {
         categoriesTableView.isHidden = false
         emptyCategoryPlaceholder.isHidden = true
         emptyCategoryText.isHidden = true
+    }
+    
+    func updateCategory(category:TrackerCategory?, header: String) {
+        viewModel.updateCategory(category: category, header: header)
     }
     
     func reload() {
@@ -164,6 +171,54 @@ extension CategoryViewController: UITableViewDelegate {
             cell.addSubview(separatorView)
         }
     }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let category = self.viewModel.categories[indexPath.row]
+        
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            let editAction = self.createEditAction(for: category)
+            let deleteAction = self.createDeleteAction(for: category)
+            
+            let actions = [editAction, deleteAction]
+            return UIMenu(title: "", children: actions)
+        }
+        
+        return configuration
+    }
+    
+    // Создание действия редактирования
+    private func createEditAction(for category: TrackerCategory) -> UIAction {
+        return UIAction(title: "Редактировать") { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.updateCategory(category: category, header: "Редактирование категории")
+        }
+    }
+    
+    // Создание действия удаления
+    private func createDeleteAction(for category: TrackerCategory) -> UIAction {
+        return UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.showDeleteCategoryAlert(category)
+        }
+    }
+    
+    // Отображение алерта удаления категории
+    private func showDeleteCategoryAlert(_ category: TrackerCategory) {
+        let alertController = UIAlertController(title: nil, message: "Эта категория точно не нужна?", preferredStyle: .actionSheet)
+        let deleteConfirmationAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
+            try? self.trackerCategoryStore.deleteCategory(category)
+            self.checkEmptyCategoriesScreen()
+            self.categoriesTableView.reloadData()
+        }
+        alertController.addAction(deleteConfirmationAction)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -178,11 +233,6 @@ extension CategoryViewController: UITableViewDataSource {
         if indexPath.row < viewModel.categories.count {
             let category = viewModel.categories[indexPath.row]
             cell.update(with: category.title)
-            if let selected = viewModel.selectedCategory {
-                if selected.title == category.title {
-                    cell.done(with: UIImage(named: "Checkmark") ?? UIImage())
-                }
-            }
             
             let isLastCell = indexPath.row == viewModel.categories.count - 1
             if isLastCell {

@@ -24,10 +24,10 @@ final class TrackerCell: UICollectionViewCell {
     
     private lazy var emojiLabel: UILabel = {
         let label = UILabel ()
-        label.backgroundColor = .ypBackgroundDay
+        label.backgroundColor = .ypEmojiBackground
         label.clipsToBounds = true
         label.layer.cornerRadius = 24 / 2
-        label.font = .systemFont(ofSize: 16, weight: .medium)//?14
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -82,6 +82,7 @@ final class TrackerCell: UICollectionViewCell {
     private var isCompletedToday: Bool = false
     private var trackerId: UUID?
     private var indexPath: IndexPath?
+    private let analytics = AnalyticsService.shared
     
     //MARK: - Helpers
     
@@ -103,13 +104,15 @@ final class TrackerCell: UICollectionViewCell {
         taskTitleLabel.text = tracker.name
         emojiLabel.text = tracker.emoji
         
-        let wordDay = pluralizeDays(completedDays)
-        daysLabel.text = "\(wordDay)"
+        daysLabel.text = String.localizedStringWithFormat(NSLocalizedString("numberOfDays", comment: ""), completedDays)
         
         let image = isCompletedToday ?
         doneImage?.withTintColor(cardView.backgroundColor ?? .ypWhiteDay) :
         plusImage.withTintColor(cardView.backgroundColor ?? .ypWhiteDay)
         addButton.setImage(image, for: UIControl.State.normal)
+        
+        self.pinnedTracker.isHidden = tracker.pinned ? false : true
+        
         if isCompletedToday {
             addButton.alpha = 0.4
         } else {
@@ -128,9 +131,18 @@ final class TrackerCell: UICollectionViewCell {
     
     private lazy var doneImage = UIImage(named: "Done")?.withRenderingMode(.alwaysTemplate)
     
+    private lazy var pinnedTracker: UIImageView = {
+        let pinnedTracker = UIImageView()
+        pinnedTracker.image = UIImage(named: "Pin")
+        pinnedTracker.translatesAutoresizingMaskIntoConstraints = false
+        return pinnedTracker
+    }()
+    
     private func addElements() {
+        contentView.addSubview(daysLabel)
         contentView.addSubview(cardView)
         contentView.addSubview(stackView)
+        contentView.addSubview(pinnedTracker)
         
         contentView.addSubview(emojiLabel)
         contentView.addSubview(taskTitleLabel)
@@ -192,27 +204,14 @@ final class TrackerCell: UICollectionViewCell {
             stackView.trailingAnchor.constraint(
                 equalTo: contentView.trailingAnchor,
                 constant: -12
-            )
+            ),
+            pinnedTracker.centerYAnchor.constraint(equalTo: emojiLabel.centerYAnchor),
+            pinnedTracker.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12)
         ])
     }
     
-    private func pluralizeDays(_ count: Int) -> String {
-        let remainder10 = count % 10
-        let remainder100 = count % 100
-        if remainder10 >= 1 && remainder100 <= 19 {
-            return "\(count) дней"
-        }
-        switch remainder10 {
-        case 1:
-            return "\(count) день"
-        case 2, 3, 4:
-            return "\(count) дня"
-        default:
-            return "\(count) дней"
-        }
-    }
-    
     @objc private func didAddButtonTapped() {
+        analytics.report("click", params: ["screen": "Main", "item": "track"])
         guard let trackerId = trackerId,
               let indexPath = indexPath else {
             assertionFailure("no trackerId")
@@ -224,5 +223,9 @@ final class TrackerCell: UICollectionViewCell {
         } else {
             delegate?.completeTracker(id: trackerId, at: indexPath)
         }
+    }
+    
+    func update(with pinned: UIImage) {
+        pinnedTracker.image = pinned
     }
 }

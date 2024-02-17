@@ -6,7 +6,7 @@
 //
 
 final class CategoryViewModel {
-        
+    
     static let shared = CategoryViewModel()
     private var categoryStore = TrackerCategoryStore.shared
     private (set) var categories: [TrackerCategory] = []
@@ -23,8 +23,12 @@ final class CategoryViewModel {
         try? self.categoryStore.addNewCategory(TrackerCategory(title: toAdd, trackers: []))
     }
     
-    func addTrackerToCategory(to title: String?, tracker: Tracker) {
-        try? self.categoryStore.addTrackerToCategory(to: title, tracker: tracker)
+    func updateCategory(category: TrackerCategory?, header: String) {
+        try? self.categoryStore.updateCategory(category: category, header: header)
+    }
+    
+    func addTrackerToCategory(to category: TrackerCategory?, tracker: Tracker) {
+        try? self.categoryStore.addTrackerToCategory(to: category, tracker: tracker)
     }
     
     func selectCategory(_ at: Int) {

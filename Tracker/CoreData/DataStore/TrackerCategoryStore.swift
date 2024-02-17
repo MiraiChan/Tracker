@@ -31,16 +31,17 @@ final class TrackerCategoryStore: NSObject {
     }
     
     convenience override init() {
-        if let context = (UIApplication.shared.delegate as? AppDelegate)?.context {
-            do {
-                try self.init(context: context)
-            } catch {
-                assertionFailure("Failed to initialize TrackerRecordStore. Error: \(error)")
-                self.init()  //TODO: Call the designated initializer with default behavior or handle it
-            }
-        } else {
+        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.context else {
             assertionFailure("Unable to obtain CoreData context.")
-            self.init()  //TODO: Call the designated initializer with default behavior or handle it
+            self.init()  // TODO: Call the designated initializer with default behavior or handle it
+            return
+        }
+
+        do {
+            try self.init(context: context)
+        } catch {
+            assertionFailure("Failed to initialize TrackerCategoryStore. Error: \(error)")
+            self.init()  // TODO: Call the designated initializer with default behavior or handle it
         }
     }
     
@@ -66,22 +67,35 @@ final class TrackerCategoryStore: NSObject {
     func addNewCategory(_ category: TrackerCategory) throws {
         let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
         trackerCategoryCoreData.title = category.title
+        
         trackerCategoryCoreData.trackers = category.trackers.map {
             $0.id
         }
         try context.save()
     }
     
-    func addTrackerToCategory(to title: String?, tracker: Tracker) throws {
-        guard let fromDb = try self.fetchTrackerCategory(with: title) else {
-            assertionFailure("Failed to fetch the tracker category with title: \(title ?? "")")
+    func updateCategory(category: TrackerCategory?, header: String) throws {
+        guard let fromDb = try self.fetchTrackerCategory(with: category) else { fatalError() }
+        fromDb.title = header
+        try context.save()
+    }
+    
+    func addTrackerToCategory(to category: TrackerCategory?, tracker: Tracker) throws {
+        guard let fromDb = try self.fetchTrackerCategory(with: category) else {
+            assertionFailure("Failed to fetch the tracker category with title: \(String(describing: category))")
             return
         }
         fromDb.trackers = trackerCategories.first {
-            $0.title == title
+            $0.title == fromDb.title
         }?.trackers.map { $0.id }
-        print(type(of: fromDb.trackers))
         fromDb.trackers?.append(tracker.id)
+        try context.save()
+    }
+    
+    func deleteCategory(_ category: TrackerCategory?) throws {
+        let toDelete = try fetchTrackerCategory(with: category)
+        guard let toDelete = toDelete else { return }
+        context.delete(toDelete)
         try context.save()
     }
     
@@ -100,12 +114,12 @@ final class TrackerCategoryStore: NSObject {
         return TrackerCategory(title: title, trackers: filteredTrackers)
     }
     
-    func fetchTrackerCategory(with title: String?) throws -> TrackerCategoryCoreData? {
-        guard let title = title else {
+    func fetchTrackerCategory(with category: TrackerCategory?) throws -> TrackerCategoryCoreData? {
+        guard let category = category else {
             throw TrackerError.invalidTitle
         }
         let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "title == %@", title as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "title == %@", category.title as CVarArg)
         let result = try context.fetch(fetchRequest)
         return result.first
     }
@@ -115,6 +129,8 @@ final class TrackerCategoryStore: NSObject {
         case invalidTitle
     }
 }
+
+// MARK: - NSFetchedResultsControllerDelegate
 
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
